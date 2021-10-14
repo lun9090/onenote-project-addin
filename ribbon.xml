@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui" loadImage="GetImage">
+	<ribbon>
+		<tabs>
+			<tab id="bianji1" label="编辑插件">
+				<group id="groupbianji" label="项目管理">
+					<button id="update_tittle" label="更新标题状态" size="large" onAction="tittle" image="HelloWorld.png" />
+					<button id="project_start" label="未开展" size="normal" onAction="tittle" image="HelloWorld.png" />
+				</group>
+			</tab>
+		</tabs>
+	</ribbon>
+</customUI>
