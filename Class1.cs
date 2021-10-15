@@ -54,7 +54,7 @@ namespace litingaddin
             return Properties.Resources.ribbon;
         }
 
-        public void update_tittle_all()
+        public static void update_tittle_all()
         {
             OneNote.Application onenoteApp = new OneNote.Application();
             string xml;

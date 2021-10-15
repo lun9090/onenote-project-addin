@@ -51,6 +51,8 @@ onenote项目管理插件
 
 - C# 如何获取时间各种方法（日期+具体时间）：https://www.cnblogs.com/qy1234/p/12170612.html
 
+- c#调用类方法时，被引用的类 有无public修饰问题：https://zhidao.baidu.com/question/1739128861328867907.html
+
   
 
 
