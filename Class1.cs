@@ -53,53 +53,15 @@ namespace litingaddin
         {
             return Properties.Resources.ribbon;
         }
-        static XNamespace ns = null;
-        public void update_tittle(IRibbonControl control)
+
+        public void update_tittle_all()
         {
             OneNote.Application onenoteApp = new OneNote.Application();
             string xml;
             var pageid = onenoteApp.Windows.CurrentWindow.CurrentPageId;
             onenoteApp.GetPageContent(pageid, out xml, OneNote.PageInfo.piAll);
             var doc = XDocument.Parse(xml);
-            ns = doc.Root.Name.Namespace;
-            var outLine_title = doc.Descendants(ns + "T").FirstOrDefault();
-            //MessageBox.Show(outLine.Value);
-            //XElement element =doc.Descendants(ns + "TagDef").FirstOrDefault();
-            var title_update = string.Empty;
-            int index = outLine_title.Value.LastIndexOf('｜');
-            outLine_title.Value = outLine_title.Value.Substring(index + 1);
-            foreach (XElement tags in from node in doc.Descendants(ns +
-      "TagDef") select node)
-            {
-                var outLine_tag = tags.Attribute("name").Value.ToString();
-                if (outLine_tag == "Page Tags")
-                {
-                    break;
-                }
-                //else if(outLine_title.Value.Contains(outLine_tag)==true)
-                //{
-                //    break;
-                //}
-                //else if (outLine_title.Value.Contains(outLine_tag) == false)
-                //{
-                //    outLine_title.Value = outLine_tag + "｜" + outLine_title.Value;
-                //}
-                else
-                {
-                    outLine_title.Value = outLine_tag + "｜" + outLine_title.Value;
-                }
-            }
-            
-            onenoteApp.UpdatePageContent(doc.ToString(), System.DateTime.MinValue);
-        }
-        public void project_start(IRibbonControl control)
-        {
-            OneNote.Application onenoteApp = new OneNote.Application();
-            string xml;
-            var pageid = onenoteApp.Windows.CurrentWindow.CurrentPageId;
-            onenoteApp.GetPageContent(pageid, out xml, OneNote.PageInfo.piAll);
-            var doc = XDocument.Parse(xml);
-            ns = doc.Root.Name.Namespace;
+            XNamespace ns = doc.Root.Name.Namespace;
             var outLine_title = doc.Descendants(ns + "T").FirstOrDefault();
             //MessageBox.Show(outLine.Value);
             //XElement element =doc.Descendants(ns + "TagDef").FirstOrDefault();
@@ -130,6 +92,71 @@ namespace litingaddin
             }
 
             onenoteApp.UpdatePageContent(doc.ToString(), System.DateTime.MinValue);
+        }
+        public void update_tittle(IRibbonControl control)
+        {
+            update_tittle_all();
+        }
+        public void project_start(IRibbonControl control)
+        {
+
+            OneNote.Application onenoteApp = new OneNote.Application();
+            string xml;
+            var pageid = onenoteApp.Windows.CurrentWindow.CurrentPageId;
+            onenoteApp.GetPageContent(pageid, out xml, OneNote.PageInfo.piAll);
+            var doc = XDocument.Parse(xml);
+            XNamespace ns = doc.Root.Name.Namespace;
+            string new_time = DateTime.Now.ToString("yyyy-MM-ddThh:mm:ss.fffZ");
+            if (doc.Descendants(ns + "TagDef").Any()==true)
+            {
+                XElement TagDefs = doc.Descendants(ns +"TagDef").Last();
+                string index = TagDefs.Attribute("index").Value;
+                XElement newTagDefs = new XElement("TagDef",
+                                                new XElement("index", index + 1),
+                                                new XElement("type", "1"),
+                                                new XElement("symbol", "0"),
+                                                new XElement("fontColor", "automatic"),
+                                                new XElement("highlightColor", "none"),
+                                                new XElement("name", "【未开展】")
+                                                );
+                TagDefs.Add(newTagDefs);
+                
+                XElement Tags = doc.Descendants(ns + "Tag").Last();
+                XElement newTags = new XElement("Tag",
+                                                new XElement("index", index + 1),
+                                                new XElement("completed", "true"),
+                                                new XElement("disabled", "false"),
+                                                new XElement("creationDate", "automatic"),
+                                                new XElement("highlightColor", new_time),
+                                                new XElement("completionDate", new_time)
+                                                );
+                Tags.Add(newTags);
+            }
+            else
+            {
+                XElement page = doc.Descendants(ns + "Page").Last();
+                XElement newTagDefs = new XElement("TagDef",
+                                                new XElement("index", "0"),
+                                                new XElement("type", "1"),
+                                                new XElement("symbol", "0"),
+                                                new XElement("fontColor", "automatic"),
+                                                new XElement("highlightColor", "none"),
+                                                new XElement("name", "【未开展】")
+                                                );
+                page.Add(newTagDefs);
+                XElement OE = doc.Descendants(ns + "OE").Last();
+                XElement newTags = new XElement("Tag",
+                                                new XElement("index", "0"),
+                                                new XElement("completed", "true"),
+                                                new XElement("disabled", "false"),
+                                                new XElement("creationDate", "automatic"),
+                                                new XElement("highlightColor", new_time),
+                                                new XElement("completionDate", new_time)
+                                                );
+                //OE.Add(newTags);
+            }
+            
+            update_tittle_all();
         }
 
         class CCOMStreamWrapper : IStream

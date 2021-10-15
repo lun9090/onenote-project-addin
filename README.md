@@ -33,6 +33,24 @@ onenote项目管理插件
 
 - OneNote开发人员参考：https://docs.microsoft.com/zh-cn/office/client-developer/onenote/onenote-home
 
+- C# 截取字符串某个字符分割的最后一部分：https://www.cnblogs.com/wdd812674802/p/10406956.html
+
+- C语言break和continue用法详解（跳出循环）：http://c.biancheng.net/view/1812.html
+
+- xml相关：https://docs.microsoft.com/en-us/dotnet/api/system.xml.linq?view=net-5.0
+
+- XDocument descendants（foreach 的使用）：https://stackoverflow.com/questions/22492902/xdocument-descendants
+
+- 获取xdocument中的节点属性：http://cn.voidcc.com/question/p-kxkrfvnw-bdo.html
+
+- C# 使用XDocument实现读取、添加，修改XML文件：https://www.cnblogs.com/haosit/p/6801420.html
+
+- c# – 向Xdocument添加新的XElement：http://www.voidcn.com/article/p-bnooxczw-bvm.html
+
+- 图标来源：https://iconstore.co/
+
+- C# 如何获取时间各种方法（日期+具体时间）：https://www.cnblogs.com/qy1234/p/12170612.html
+
   
 
 
