@@ -97,7 +97,7 @@ namespace litingaddin
         {
             update_tittle_all();
         }
-        public void project_start(IRibbonControl control)
+        public void playlist_add(IRibbonControl control)
         {
 
             OneNote.Application onenoteApp = new OneNote.Application();
@@ -111,8 +111,11 @@ namespace litingaddin
             {
                 XElement TagDefs = doc.Descendants(ns +"TagDef").Last();
                 string index = TagDefs.Attribute("index").Value;
+                int index_i = int.Parse(index);
+                index_i = index_i + 1;
+                string index_s = index_i.ToString();
                 XElement newTagDefs = new XElement("TagDef",
-                                                new XElement("index", index + 1),
+                                                new XElement("index", index_s),
                                                 new XElement("type", "1"),
                                                 new XElement("symbol", "0"),
                                                 new XElement("fontColor", "automatic"),
@@ -123,18 +126,17 @@ namespace litingaddin
                 
                 XElement Tags = doc.Descendants(ns + "Tag").Last();
                 XElement newTags = new XElement("Tag",
-                                                new XElement("index", index + 1),
+                                                new XElement("index", index_s),
                                                 new XElement("completed", "true"),
                                                 new XElement("disabled", "false"),
-                                                new XElement("creationDate", "automatic"),
-                                                new XElement("highlightColor", new_time),
+                                                new XElement("creationDate", new_time),
                                                 new XElement("completionDate", new_time)
                                                 );
                 Tags.Add(newTags);
             }
             else
             {
-                XElement page = doc.Descendants(ns + "Page").Last();
+                XElement page = doc.Descendants(ns + "Page").FirstOrDefault();
                 XElement newTagDefs = new XElement("TagDef",
                                                 new XElement("index", "0"),
                                                 new XElement("type", "1"),
@@ -144,13 +146,12 @@ namespace litingaddin
                                                 new XElement("name", "【未开展】")
                                                 );
                 page.Add(newTagDefs);
-                XElement OE = doc.Descendants(ns + "OE").Last();
+                XElement OE = doc.Descendants(ns + "OE").FirstOrDefault();
                 XElement newTags = new XElement("Tag",
                                                 new XElement("index", "0"),
                                                 new XElement("completed", "true"),
                                                 new XElement("disabled", "false"),
-                                                new XElement("creationDate", "automatic"),
-                                                new XElement("highlightColor", new_time),
+                                                new XElement("creationDate", new_time),
                                                 new XElement("completionDate", new_time)
                                                 );
                 //OE.Add(newTags);
@@ -261,9 +262,23 @@ namespace litingaddin
         public IStream GetImage(string imageName)
         {
             MemoryStream mem = new MemoryStream();
-            Properties.Resources.HelloWorld.Save(mem, ImageFormat.Png);
+            switch (imageName)
+            {
+                case "update_title.png":
+                    Properties.Resources.update_title.Save(mem, ImageFormat.Png);
+                    break;
+
+                case "playlist_add.png":
+                    Properties.Resources.playlist_add.Save(mem, ImageFormat.Png);
+                    break;
+                default:
+                    Properties.Resources.update_title.Save(mem, ImageFormat.Png);
+                    break;
+            }
+
             return new CCOMStreamWrapper(mem);
         }
+       
 
 
     }

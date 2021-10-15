@@ -53,6 +53,14 @@ onenote项目管理插件
 
 - c#调用类方法时，被引用的类 有无public修饰问题：https://zhidao.baidu.com/question/1739128861328867907.html
 
+- C#字符串转换为数字的4种方法：https://blog.csdn.net/coolszy/article/details/83531866
+
+- C#中字符串与数值的相互转换：https://www.cnblogs.com/hans_gis/archive/2011/04/16/2018318.html
+
+- 图标相关：https://github.com/WetHat/OnenoteTaggingKit/blob/54e7f263d445cc0e7e190c26facc61a0fdfa02f0/OneNoteTaggingKit/Connect.cs
+
+  
+
   
 
 

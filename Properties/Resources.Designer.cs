@@ -63,9 +63,29 @@ namespace litingaddin.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
-        internal static System.Drawing.Bitmap HelloWorld {
+        internal static System.Drawing.Bitmap playlist_add {
             get {
-                object obj = ResourceManager.GetObject("HelloWorld", resourceCulture);
+                object obj = ResourceManager.GetObject("playlist_add", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap playlist_add_check {
+            get {
+                object obj = ResourceManager.GetObject("playlist_add_check", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap playlist_play {
+            get {
+                object obj = ResourceManager.GetObject("playlist_play", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -75,18 +95,29 @@ namespace litingaddin.Properties {
         ///&lt;customUI xmlns=&quot;http://schemas.microsoft.com/office/2006/01/customui&quot; loadImage=&quot;GetImage&quot;&gt;
         ///	&lt;ribbon&gt;
         ///		&lt;tabs&gt;
-        ///			&lt;tab id=&quot;tabCustom&quot; label=&quot;Custom&quot;&gt;
-        ///				&lt;group id=&quot;groupHello&quot; label=&quot;Hello&quot;&gt;
-        ///					&lt;button id=&quot;buttonHello&quot; label=&quot;Hello World!&quot; size=&quot;large&quot; screentip=&quot;Press this for a &apos;Hello World!&apos; message&quot; onAction=&quot;showHello&quot; image=&quot;HelloWorld.png&quot; /&gt;
+        ///			&lt;tab id=&quot;bianji1&quot; label=&quot;插件&quot;&gt;
+        ///				&lt;group id=&quot;groupbianji&quot; label=&quot;项目管理&quot;&gt;
+        ///					&lt;button id=&quot;update_tittle&quot; label=&quot;更新标题状态&quot; size=&quot;large&quot; onAction=&quot;update_tittle&quot; image=&quot;update_title.png&quot; /&gt;
+        ///					&lt;button id=&quot;playlist_add&quot; label=&quot;未开展&quot; size=&quot;normal&quot; onAction=&quot;playlist_add&quot; image=&quot;playlist_add.png&quot; /&gt;
         ///				&lt;/group&gt;
         ///			&lt;/tab&gt;
         ///		&lt;/tabs&gt;
         ///	&lt;/ribbon&gt;
-        ///&lt;/customUI&gt; 的本地化字符串。
+        ///&lt;/custo [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         internal static string ribbon {
             get {
                 return ResourceManager.GetString("ribbon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap update_title {
+            get {
+                object obj = ResourceManager.GetObject("update_title", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

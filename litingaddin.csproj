@@ -60,7 +60,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\HelloWorld.png" />
+    <None Include="Resources\title%404x.png" />
+    <None Include="Resources\playlist_add.png" />
+    <None Include="Resources\playlist_add_check.png" />
+    <None Include="Resources\playlist_play.png" />
     <Content Include="ribbon.xml" />
   </ItemGroup>
   <ItemGroup>
