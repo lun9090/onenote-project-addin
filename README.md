@@ -59,6 +59,12 @@ onenote项目管理插件
 
 - 图标相关：https://github.com/WetHat/OnenoteTaggingKit/blob/54e7f263d445cc0e7e190c26facc61a0fdfa02f0/OneNoteTaggingKit/Connect.cs
 
+- VSTO开发入门，使用CustomUI自定义Office功能区：http://cas01.com/6482.html
+
+- VSTO开发入门，CustomUI元素详解：https://zhuanlan.zhihu.com/p/338524994
+
+- Excel CustomUI功能区布局：http://cn.voidcc.com/question/p-ejdgwjjv-kk.html
+
   
 
   
