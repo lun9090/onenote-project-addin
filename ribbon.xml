@@ -6,6 +6,7 @@
 				<group id="groupbianji" label="状态管理" >
 					<button id="update_tittle" label="更新标题状态" size="large" onAction="update_tittle" image="update_title.png" />
 					<button id="playlist_add" label="未开展" size="normal" onAction="playlist_add" image="playlist_add.png" />
+					<button id="allin_xml" label="查看xml" size="normal" onAction="allin_xml" image="playlist_add.png" />
 				</group>
 			</tab>
 		</tabs>

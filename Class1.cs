@@ -121,11 +121,10 @@ namespace litingaddin
                                                 new XElement("symbol", "0"),
                                                 new XElement("fontColor", "automatic"),
                                                 new XElement("highlightColor", "none"),
-                                                new XElement("name", "【未开展】"),
-                                                new XElement("one","http://schemas.microsoft.com/office/onenote/2013/onenote")
+                                                new XElement("name", "【未开展】")
                                                 );
                 TagDefs.Add(newTagDefs);
-                
+
                 XElement Tags = doc.Descendants(ns + "Tag").Last();
                 XElement newTags = new XElement("Tag",
                                                 new XElement("index", index_s),
@@ -135,6 +134,7 @@ namespace litingaddin
                                                 new XElement("completionDate", new_time)
                                                 );
                 Tags.Add(newTags);
+                onenoteApp.UpdatePageContent(doc.ToString(), System.DateTime.MinValue);
             }
             else
             {
@@ -145,8 +145,7 @@ namespace litingaddin
                                                 new XElement("symbol", "0"),
                                                 new XElement("fontColor", "automatic"),
                                                 new XElement("highlightColor", "none"),
-                                                new XElement("name", "【未开展】"),
-                                                new XElement("one", "http://schemas.microsoft.com/office/onenote/2013/onenote")
+                                                new XElement("name", "【未开展】")
                                                 );
                 page.Add(newTagDefs);
                 XElement OE = doc.Descendants(ns + "OE").FirstOrDefault();
@@ -157,12 +156,24 @@ namespace litingaddin
                                                 new XElement("creationDate", new_time),
                                                 new XElement("completionDate", new_time)
                                                 );
-                //OE.Add(newTags);
+                OE.Add(newTags);
+                onenoteApp.UpdatePageContent(doc.ToString(), System.DateTime.MinValue);
             }
             
             update_tittle_all();
         }
 
+        public void allin_xml(IRibbonControl control)
+        {
+
+            OneNote.Application onenoteApp = new OneNote.Application();
+            string xml;
+            var pageid = onenoteApp.Windows.CurrentWindow.CurrentPageId;
+            onenoteApp.GetPageContent(pageid, out xml, OneNote.PageInfo.piAll);
+            var doc = XDocument.Parse(xml);
+            MessageBox.Show(doc.ToString());
+
+        }
         class CCOMStreamWrapper : IStream
         {
             public CCOMStreamWrapper(System.IO.Stream streamWrap)
