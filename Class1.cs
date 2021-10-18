@@ -110,6 +110,7 @@ namespace litingaddin
             if (doc.Descendants(ns + "TagDef").Any()==true)
             {
                 XElement TagDefs = doc.Descendants(ns +"TagDef").Last();
+                //MessageBox.Show(TagDefs.ToString());
                 string index = TagDefs.Attribute("index").Value;
                 int index_i = int.Parse(index);
                 index_i = index_i + 1;
@@ -120,7 +121,8 @@ namespace litingaddin
                                                 new XElement("symbol", "0"),
                                                 new XElement("fontColor", "automatic"),
                                                 new XElement("highlightColor", "none"),
-                                                new XElement("name", "【未开展】")
+                                                new XElement("name", "【未开展】"),
+                                                new XElement("one","http://schemas.microsoft.com/office/onenote/2013/onenote")
                                                 );
                 TagDefs.Add(newTagDefs);
                 
@@ -143,7 +145,8 @@ namespace litingaddin
                                                 new XElement("symbol", "0"),
                                                 new XElement("fontColor", "automatic"),
                                                 new XElement("highlightColor", "none"),
-                                                new XElement("name", "【未开展】")
+                                                new XElement("name", "【未开展】"),
+                                                new XElement("one", "http://schemas.microsoft.com/office/onenote/2013/onenote")
                                                 );
                 page.Add(newTagDefs);
                 XElement OE = doc.Descendants(ns + "OE").FirstOrDefault();
