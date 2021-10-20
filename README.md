@@ -6,7 +6,7 @@ onenote项目管理插件
 # 功能清单
 
 - 更新OneNote标记到标题，格式：{标记}｜...｜{标题}。已经开发完成。
-- 选择标题，设置未开展标记，并更新标记到标题。开发中。
+- 选择标题，设置未开展标记，并更新标记到标题。2021年10月20日已经开发完成。
 
 # 特别说明
 
@@ -59,11 +59,18 @@ onenote项目管理插件
 
 - 图标相关：https://github.com/WetHat/OnenoteTaggingKit/blob/54e7f263d445cc0e7e190c26facc61a0fdfa02f0/OneNoteTaggingKit/Connect.cs
 
+- 修复xml：
+
+  - https://zhidao.baidu.com/question/509973126.html 
+  - ed2k://|file|cn_msxml_4.0_service_pack_3_x86.msi|2373120|ABFEF286E3620313057B222B1699A732|/
+
 - VSTO开发入门，使用CustomUI自定义Office功能区：http://cas01.com/6482.html
 
 - VSTO开发入门，CustomUI元素详解：https://zhuanlan.zhihu.com/p/338524994
 
 - Excel CustomUI功能区布局：http://cn.voidcc.com/question/p-ejdgwjjv-kk.html
+
+- 
 
   
 

@@ -95,15 +95,11 @@ namespace litingaddin.Properties {
         ///&lt;customUI xmlns=&quot;http://schemas.microsoft.com/office/2006/01/customui&quot; loadImage=&quot;GetImage&quot;&gt;
         ///	&lt;ribbon&gt;
         ///		&lt;tabs&gt;
-        ///			&lt;tab id=&quot;bianji1&quot; label=&quot;插件&quot;&gt;
-        ///				&lt;group id=&quot;groupbianji&quot; label=&quot;项目管理&quot;&gt;
+        ///			&lt;tab id=&quot;bianji1&quot; label=&quot;项目管理&quot;&gt;
+        ///				&lt;group id=&quot;groupbianji&quot; label=&quot;状态管理&quot;&gt;
         ///					&lt;button id=&quot;update_tittle&quot; label=&quot;更新标题状态&quot; size=&quot;large&quot; onAction=&quot;update_tittle&quot; image=&quot;update_title.png&quot; /&gt;
         ///					&lt;button id=&quot;playlist_add&quot; label=&quot;未开展&quot; size=&quot;normal&quot; onAction=&quot;playlist_add&quot; image=&quot;playlist_add.png&quot; /&gt;
-        ///				&lt;/group&gt;
-        ///			&lt;/tab&gt;
-        ///		&lt;/tabs&gt;
-        ///	&lt;/ribbon&gt;
-        ///&lt;/custo [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        ///					&lt;button id=&quot;allin_xml&quot; label=&quot;查看xml&quot; size=&quot;norma [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         internal static string ribbon {
             get {

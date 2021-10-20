@@ -1,6 +1,5 @@
 ﻿using Extensibility;
 using Microsoft.Office.Core;
-using Microsoft.Office.Interop.OneNote;
 using System;
 using System.Drawing.Imaging;
 using System.IO;
@@ -8,9 +7,9 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Windows.Forms;
-using System.Xml;
 using System.Xml.Linq;
 using OneNote = Microsoft.Office.Interop.OneNote;
+
 
 namespace litingaddin
 {
@@ -97,6 +96,11 @@ namespace litingaddin
         {
             update_tittle_all();
         }
+        public void get_tags(IRibbonControl control)
+        {
+            
+
+        }
         public void playlist_add(IRibbonControl control)
         {
 
@@ -107,59 +111,64 @@ namespace litingaddin
             var doc = XDocument.Parse(xml);
             XNamespace ns = doc.Root.Name.Namespace;
             string new_time = DateTime.Now.ToString("yyyy-MM-ddThh:mm:ss.fffZ");
-            if (doc.Descendants(ns + "TagDef").Any()==true)
+            if (doc.Descendants(ns + "TagDef").Any() == true)
             {
-                XElement TagDefs = doc.Descendants(ns +"TagDef").Last();
+                XElement TagDefs = doc.Descendants(ns + "TagDef").Last();
                 //MessageBox.Show(TagDefs.ToString());
                 string index = TagDefs.Attribute("index").Value;
                 int index_i = int.Parse(index);
                 index_i = index_i + 1;
                 string index_s = index_i.ToString();
-                XElement newTagDefs = new XElement("TagDef",
-                                                new XElement("index", index_s),
-                                                new XElement("type", "1"),
-                                                new XElement("symbol", "0"),
-                                                new XElement("fontColor", "automatic"),
-                                                new XElement("highlightColor", "none"),
-                                                new XElement("name", "【未开展】")
+                XElement newTagDefs = new XElement(ns + "TagDef",
+                                                new XAttribute("index", index_s),
+                                                new XAttribute("type", "1"),
+                                                new XAttribute("symbol", "0"),
+                                                new XAttribute("fontColor", "automatic"),
+                                                new XAttribute("highlightColor", "none"),
+                                                new XAttribute("name", "【未开展】")
                                                 );
-                TagDefs.Add(newTagDefs);
+                //MessageBox.Show(newTagDefs.ToString());
+                TagDefs.AddAfterSelf(newTagDefs);
+                //TagDefs.Add(newTagDefs);
 
                 XElement Tags = doc.Descendants(ns + "Tag").Last();
-                XElement newTags = new XElement("Tag",
-                                                new XElement("index", index_s),
-                                                new XElement("completed", "true"),
-                                                new XElement("disabled", "false"),
-                                                new XElement("creationDate", new_time),
-                                                new XElement("completionDate", new_time)
+                XElement newTags = new XElement(ns + "Tag",
+                                                new XAttribute("index", index_s),
+                                                new XAttribute("completed", "true"),
+                                                new XAttribute("disabled", "false"),
+                                                new XAttribute("creationDate", new_time),
+                                                new XAttribute("completionDate", new_time)
                                                 );
-                Tags.Add(newTags);
+                Tags.AddAfterSelf(newTags);
+                MessageBox.Show(doc.ToString());
                 onenoteApp.UpdatePageContent(doc.ToString(), System.DateTime.MinValue);
             }
             else
             {
                 XElement page = doc.Descendants(ns + "Page").FirstOrDefault();
-                XElement newTagDefs = new XElement("TagDef",
-                                                new XElement("index", "0"),
-                                                new XElement("type", "1"),
-                                                new XElement("symbol", "0"),
-                                                new XElement("fontColor", "automatic"),
-                                                new XElement("highlightColor", "none"),
-                                                new XElement("name", "【未开展】")
+                XElement newTagDefs = new XElement(ns + "TagDef",
+                                                new XAttribute("index", "0"),
+                                                new XAttribute("type", "1"),
+                                                new XAttribute("symbol", "0"),
+                                                new XAttribute("fontColor", "automatic"),
+                                                new XAttribute("highlightColor", "none"),
+                                                new XAttribute("name", "【未开展】")
                                                 );
-                page.Add(newTagDefs);
+                //MessageBox.Show(newTagDefs.ToString());
+                page.AddFirst(newTagDefs);
                 XElement OE = doc.Descendants(ns + "OE").FirstOrDefault();
-                XElement newTags = new XElement("Tag",
-                                                new XElement("index", "0"),
-                                                new XElement("completed", "true"),
-                                                new XElement("disabled", "false"),
-                                                new XElement("creationDate", new_time),
-                                                new XElement("completionDate", new_time)
+                XElement newTags = new XElement(ns + "Tag",
+                                                new XAttribute("index", "0"),
+                                                new XAttribute("completed", "true"),
+                                                new XAttribute("disabled", "false"),
+                                                new XAttribute("creationDate", new_time),
+                                                new XAttribute("completionDate", new_time)
                                                 );
-                OE.Add(newTags);
+                OE.AddFirst(newTags);
+                //MessageBox.Show(doc.ToString());
                 onenoteApp.UpdatePageContent(doc.ToString(), System.DateTime.MinValue);
             }
-            
+
             update_tittle_all();
         }
 
@@ -292,7 +301,7 @@ namespace litingaddin
 
             return new CCOMStreamWrapper(mem);
         }
-       
+
 
 
     }
