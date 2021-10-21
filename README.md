@@ -76,6 +76,10 @@ onenote项目管理插件
 
 - 在应用程序中创建第一个 IWin32Window 对象之前，必须调用 SetCompatibleTextRenderingDefault。...：https://blog.csdn.net/ants717007/article/details/101120199
 
+- 周末浅说--未将对象引用设置到对象的实例(System.NullReferenceException)：https://www.cnblogs.com/cyq1162/archive/2011/07/24/2115388.html
+
+- C#中判断字符串为空的几种方法的比较：https://blog.csdn.net/biaobiao1217/article/details/39047963
+
   
 
   

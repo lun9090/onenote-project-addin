@@ -211,9 +211,62 @@ namespace litingaddin
             Set_tags(control, "9", "【已转需补充】");
         }
 
-        public void zhengwen_duiqi()
+        public void Del_none(IRibbonControl control)
         {
+            OneNote.Application onenoteApp = new OneNote.Application();
+            string xml;
+            var pageid = onenoteApp.Windows.CurrentWindow.CurrentPageId;
+            onenoteApp.GetPageContent(pageid, out xml, OneNote.PageInfo.piAll);
+            var doc = XDocument.Parse(xml);
+            XNamespace ns = doc.Root.Name.Namespace;            
+            //MessageBox.Show(TagDefs.ToString());
+            foreach (XElement Outlines in from node in doc.Descendants(ns +
+      "Outline")
+                                      select node)
+            {
+                string OutLine_data = Outlines.Descendants(ns + "T").FirstOrDefault().Value.ToString();
+                if (String.IsNullOrEmpty(OutLine_data))
+                {
+                    Outlines.RemoveAll(); 
+                }
+                else
+                {
+                    break;
+                }
+            }
+            onenoteApp.UpdatePageContent(doc.ToString(), System.DateTime.MinValue);
+        }
 
+        public void Tongyi_data(IRibbonControl control)
+        {
+            OneNote.Application onenoteApp = new OneNote.Application();
+            string xml;
+            var pageid = onenoteApp.Windows.CurrentWindow.CurrentPageId;
+            onenoteApp.GetPageContent(pageid, out xml, OneNote.PageInfo.piAll);
+            var doc = XDocument.Parse(xml);
+            XNamespace ns = doc.Root.Name.Namespace;
+            foreach (XElement Outlines in from node in doc.Descendants(ns +
+      "Outline")
+                                          select node)
+            {
+                string OutLine_data = Outlines.Descendants(ns + "T").FirstOrDefault().Value.ToString();
+                if (String.IsNullOrEmpty(OutLine_data))
+                {
+                    break;
+                }
+                else
+                {
+                    XElement Positions = Outlines.Descendants(ns + "Position").FirstOrDefault();
+                    Positions.Attribute("x").Value= "34.80000000000000";
+                    Positions.Attribute("y").Value= "73.30000000000000";
+                    XElement Sizes = Outlines.Descendants(ns + "Size").FirstOrDefault();
+                    Sizes.Attribute("width").Value = "778.40000000000000";
+                    XElement OEs = Outlines.Descendants(ns + "OE").FirstOrDefault();
+                    OEs.Add(new XAttribute("style" , "font-family:宋体;font-size:14.0pt;color:black"));
+                   
+                }
+            }
+            onenoteApp.UpdatePageContent(doc.ToString(), System.DateTime.MinValue);
         }
         public void allin_xml(IRibbonControl control)
         {
