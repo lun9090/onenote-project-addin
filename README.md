@@ -70,7 +70,7 @@ onenote项目管理插件
 
 - Excel CustomUI功能区布局：http://cn.voidcc.com/question/p-ejdgwjjv-kk.html
 
-- 
+- C#比较两个list集合，两集合同时存在或A集合存在B集合中无：https://blog.csdn.net/smartsmile2012/article/details/54408439/
 
   
 

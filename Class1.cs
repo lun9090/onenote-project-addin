@@ -1,6 +1,8 @@
 ﻿using Extensibility;
 using Microsoft.Office.Core;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -76,14 +78,14 @@ namespace litingaddin
                 {
                     break;
                 }
-                //else if(outLine_title.Value.Contains(outLine_tag)==true)
-                //{
-                //    break;
-                //}
-                //else if (outLine_title.Value.Contains(outLine_tag) == false)
-                //{
-                //    outLine_title.Value = outLine_tag + "｜" + outLine_title.Value;
-                //}
+                else if(outLine_title.Value.Contains(outLine_tag)==true)
+                {
+                    break;
+                }
+                else if (outLine_title.Value.Contains(outLine_tag) == false)
+                {
+                    outLine_title.Value = outLine_tag + "｜" + outLine_title.Value;
+                }
                 else
                 {
                     outLine_title.Value = outLine_tag + "｜" + outLine_title.Value;
@@ -96,14 +98,8 @@ namespace litingaddin
         {
             update_tittle_all();
         }
-        public void get_tags(IRibbonControl control)
+        public static void Set_tags(IRibbonControl control,string p_type,string p_name)
         {
-            
-
-        }
-        public void playlist_add(IRibbonControl control)
-        {
-
             OneNote.Application onenoteApp = new OneNote.Application();
             string xml;
             var pageid = onenoteApp.Windows.CurrentWindow.CurrentPageId;
@@ -121,11 +117,11 @@ namespace litingaddin
                 string index_s = index_i.ToString();
                 XElement newTagDefs = new XElement(ns + "TagDef",
                                                 new XAttribute("index", index_s),
-                                                new XAttribute("type", "1"),
+                                                new XAttribute("type", p_type),
                                                 new XAttribute("symbol", "0"),
                                                 new XAttribute("fontColor", "automatic"),
                                                 new XAttribute("highlightColor", "none"),
-                                                new XAttribute("name", "【未开展】")
+                                                new XAttribute("name", p_name)
                                                 );
                 //MessageBox.Show(newTagDefs.ToString());
                 TagDefs.AddAfterSelf(newTagDefs);
@@ -140,7 +136,7 @@ namespace litingaddin
                                                 new XAttribute("completionDate", new_time)
                                                 );
                 Tags.AddAfterSelf(newTags);
-                MessageBox.Show(doc.ToString());
+                //MessageBox.Show(doc.ToString());
                 onenoteApp.UpdatePageContent(doc.ToString(), System.DateTime.MinValue);
             }
             else
@@ -148,11 +144,11 @@ namespace litingaddin
                 XElement page = doc.Descendants(ns + "Page").FirstOrDefault();
                 XElement newTagDefs = new XElement(ns + "TagDef",
                                                 new XAttribute("index", "0"),
-                                                new XAttribute("type", "1"),
+                                                new XAttribute("type", p_type),
                                                 new XAttribute("symbol", "0"),
                                                 new XAttribute("fontColor", "automatic"),
                                                 new XAttribute("highlightColor", "none"),
-                                                new XAttribute("name", "【未开展】")
+                                                new XAttribute("name", p_name)
                                                 );
                 //MessageBox.Show(newTagDefs.ToString());
                 page.AddFirst(newTagDefs);
@@ -171,6 +167,50 @@ namespace litingaddin
 
             update_tittle_all();
         }
+        public void Playlist_kaizhanzhong(IRibbonControl control)
+        {
+            Set_tags(control,"0", "【开展中】");
+        }
+        public void playlist_add(IRibbonControl control)
+        {
+            Set_tags(control, "0", "【未开展】");
+        }
+        public void Playlist_weiqueren(IRibbonControl control)
+        {
+            Set_tags(control, "2", "【未确认】");
+        }
+
+        public void Playlist_zuofei(IRibbonControl control)
+        {
+            Set_tags(control, "3", "【作废】");
+        }
+        public void Playlist_daisheji(IRibbonControl control)
+        {
+            Set_tags(control, "4", "【待设计】");
+        }
+        public void Playlist_weizhuan(IRibbonControl control)
+        {
+            Set_tags(control, "5", "【未转】");
+        }
+        public void Playlist_hebing(IRibbonControl control)
+        {
+            Set_tags(control, "6", "【合并】");
+        }
+        public void Playlist_yizhuan(IRibbonControl control)
+        {
+            Set_tags(control, "7", "【已转】");
+        }
+
+        public void Playlist_zanbukaizhan(IRibbonControl control)
+        {
+            Set_tags(control, "8", "【暂不开展】");
+        }
+
+        public void Playlist_yizhuanxubuchong(IRibbonControl control)
+        {
+            Set_tags(control, "9", "【已转需补充】");
+        }
+        
 
         public void allin_xml(IRibbonControl control)
         {
