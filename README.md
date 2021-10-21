@@ -72,6 +72,10 @@ onenote项目管理插件
 
 - C#比较两个list集合，两集合同时存在或A集合存在B集合中无：https://blog.csdn.net/smartsmile2012/article/details/54408439/
 
+- C#创建Windows窗体应用程序（WinForm程序）：http://c.biancheng.net/view/2945.html
+
+- 在应用程序中创建第一个 IWin32Window 对象之前，必须调用 SetCompatibleTextRenderingDefault。...：https://blog.csdn.net/ants717007/article/details/101120199
+
   
 
   

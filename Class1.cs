@@ -210,8 +210,11 @@ namespace litingaddin
         {
             Set_tags(control, "9", "【已转需补充】");
         }
-        
 
+        public void zhengwen_duiqi()
+        {
+
+        }
         public void allin_xml(IRibbonControl control)
         {
 
@@ -220,8 +223,11 @@ namespace litingaddin
             var pageid = onenoteApp.Windows.CurrentWindow.CurrentPageId;
             onenoteApp.GetPageContent(pageid, out xml, OneNote.PageInfo.piAll);
             var doc = XDocument.Parse(xml);
-            MessageBox.Show(doc.ToString());
-
+            Application.EnableVisualStyles();
+            //Application.SetCompatibleTextRenderingDefault(false);
+            allinxml box1 = new allinxml();
+            box1.textBox1.AppendText(doc.ToString());
+            Application.Run(box1);
         }
         class CCOMStreamWrapper : IStream
         {
