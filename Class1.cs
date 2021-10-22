@@ -220,9 +220,7 @@ namespace litingaddin
             var doc = XDocument.Parse(xml);
             XNamespace ns = doc.Root.Name.Namespace;            
             //MessageBox.Show(TagDefs.ToString());
-            foreach (XElement Outlines in from node in doc.Descendants(ns +
-      "Outline")
-                                      select node)
+            foreach (XElement Outlines in from node in doc.Descendants(ns + "Outline") select node)
             {
                 string OutLine_data = Outlines.Descendants(ns + "T").FirstOrDefault().Value.ToString();
                 if (String.IsNullOrEmpty(OutLine_data))
@@ -245,9 +243,7 @@ namespace litingaddin
             onenoteApp.GetPageContent(pageid, out xml, OneNote.PageInfo.piAll);
             var doc = XDocument.Parse(xml);
             XNamespace ns = doc.Root.Name.Namespace;
-            foreach (XElement Outlines in from node in doc.Descendants(ns +
-      "Outline")
-                                          select node)
+            foreach (XElement Outlines in from node in doc.Descendants(ns + "Outline") select node)
             {
                 string OutLine_data = Outlines.Descendants(ns + "T").FirstOrDefault().Value.ToString();
                 if (String.IsNullOrEmpty(OutLine_data))
@@ -261,9 +257,79 @@ namespace litingaddin
                     Positions.Attribute("y").Value= "73.30000000000000";
                     XElement Sizes = Outlines.Descendants(ns + "Size").FirstOrDefault();
                     Sizes.Attribute("width").Value = "778.40000000000000";
-                    XElement OEs = Outlines.Descendants(ns + "OE").FirstOrDefault();
-                    OEs.Add(new XAttribute("style" , "font-family:宋体;font-size:14.0pt;color:black"));
-                   
+                    Sizes.Attribute("height").Value = Sizes.Attribute("height").Value;
+                    //int OEs_count = Outlines.Descendants(ns + "OE").Count();
+                    //MessageBox.Show(OEs_count.ToString());
+                    //if (OEs_count > 1)
+                    //{
+                    //    foreach (XElement OEs in from node in Outlines.Descendants(ns + "OE") select node)
+                    //    {
+                    //        string OEs_Styles = OEs.Attribute("style").Value;
+                    //        if (String.IsNullOrEmpty(OEs_Styles))
+                    //        {
+                    //            OEs.Add(new XAttribute("style", "font-family:宋体;font-size:14.0pt;color:black"));
+                    //        }
+                    //        else
+                    //        {
+                    //            OEs.Attribute("style").Value= "font-family:宋体;font-size:14.0pt;color:black";
+                    //        }
+                    //    }
+                    //    foreach (XElement Ts_1 in from node in Outlines.Descendants(ns + "T") select node)
+                    //    {
+                    //        string Ts_1_Styles = Ts_1.Attribute("style").Value;
+                    //        if (String.IsNullOrEmpty(Ts_1_Styles))
+                    //        {
+                    //            Ts_1.Add(new XAttribute("style", "font-family:宋体;font-size:14.0pt;color:black"));
+                    //        }
+                    //        else
+                    //        {
+                    //            Ts_1.Attribute("style").Value = "font-family:宋体;font-size:14.0pt;color:black";
+                    //        }
+                    //    }
+                    //    foreach (XElement Numbers in from node in Outlines.Descendants(ns + "Number") select node)
+                    //    {
+                    //        string Numbers_fontColors = Numbers.Attribute("fontColor").Value;
+                    //        if (String.IsNullOrEmpty(Numbers_fontColors))
+                    //        {
+                    //            Numbers.Add(new XAttribute("fontColor", "#000000"));
+                    //        }
+                    //        else
+                    //        {
+                    //            Numbers.Attribute("fontColor").Value= "#000000";
+                    //        }
+                    //        string Numbers_fontSizes = Numbers.Attribute("fontSize").Value;
+                    //        if (String.IsNullOrEmpty(Numbers_fontSizes))
+                    //        {
+                    //            Numbers.Add(new XAttribute("fontSize", "14.0"));
+                    //        }
+                    //        else
+                    //        {
+                    //            Numbers.Attribute("fontSize").Value= "14.0";
+                    //        }
+                    //        string Numbers_fonts = Numbers.Attribute("font").Value;
+                    //        if (String.IsNullOrEmpty(Numbers_fontSizes))
+                    //        {
+                    //            Numbers.Add(new XAttribute("font", "宋体"));
+                    //        }
+                    //        else
+                    //        {
+                    //            Numbers.Attribute("font").Value = "宋体";
+                    //        }
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    XElement OEs_1 = Outlines.Descendants(ns + "OE").FirstOrDefault();
+                    //    string Styles_1 = OEs_1.Attribute("style").Value;
+                    //    if (String.IsNullOrEmpty(Styles_1))
+                    //    {
+                    //        OEs_1.Add(new XAttribute("style", "font-family:宋体;font-size:14.0pt;color:black"));
+                    //    }
+                    //    else
+                    //    {
+                    //        OEs_1.Attribute("style").Value = "font-family:宋体;font-size:14.0pt;color:black";
+                    //    }
+                    //}
                 }
             }
             onenoteApp.UpdatePageContent(doc.ToString(), System.DateTime.MinValue);
