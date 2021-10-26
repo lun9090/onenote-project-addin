@@ -63,33 +63,48 @@ namespace litingaddin
             onenoteApp.GetPageContent(pageid, out xml, OneNote.PageInfo.piAll);
             var doc = XDocument.Parse(xml);
             XNamespace ns = doc.Root.Name.Namespace;
-            var outLine_title = doc.Descendants(ns + "T").FirstOrDefault();
+            //var outLine_title = doc.Descendants(ns + "T").FirstOrDefault();
             //MessageBox.Show(outLine.Value);
             //XElement element =doc.Descendants(ns + "TagDef").FirstOrDefault();
-            var title_update = string.Empty;
-            int index = outLine_title.Value.LastIndexOf('｜');
-            outLine_title.Value = outLine_title.Value.Substring(index + 1);
-            foreach (XElement tags in from node in doc.Descendants(ns +
-      "TagDef")
-                                      select node)
+            XElement OutLine_title = doc.Descendants(ns + "Title").FirstOrDefault();
+            foreach (XElement outLine_titles_all in from node in OutLine_title.Descendants(ns + "T") select node)
             {
-                var outLine_tag = tags.Attribute("name").Value.ToString();
-                if (outLine_tag == "Page Tags")
+                string outLine_titles_one = outLine_titles_all.Value;
+                if (string.IsNullOrEmpty(outLine_titles_one))
                 {
                     break;
-                }
-                else if(outLine_title.Value.Contains(outLine_tag)==true)
-                {
-                    break;
-                }
-                else if (outLine_title.Value.Contains(outLine_tag) == false)
-                {
-                    outLine_title.Value = outLine_tag + "｜" + outLine_title.Value;
                 }
                 else
                 {
-                    outLine_title.Value = outLine_tag + "｜" + outLine_title.Value;
-                }
+                    var title_update = string.Empty;
+                    int index = outLine_titles_all.Value.LastIndexOf('｜');
+                    outLine_titles_all.Value = outLine_titles_all.Value.Substring(index + 1);
+                    foreach (XElement tags in from node in doc.Descendants(ns +
+              "TagDef")
+                                              select node)
+                    {
+                        var outLine_tag = tags.Attribute("name").Value.ToString();
+                        if (outLine_tag == "Page Tags")
+                        {
+                            break;
+                        }
+                        else if (outLine_titles_all.Value.Contains(outLine_tag) == true)
+                        {
+                            break;
+                        }
+                        else if (outLine_titles_all.Value.Contains(outLine_tag) == false)
+                        {
+                            outLine_titles_all.Value = outLine_tag + "｜" + outLine_titles_all.Value;
+                        }
+                        else
+                        {
+                            outLine_titles_all.Value = outLine_tag + "｜" + outLine_titles_all.Value;
+                        }
+                    }
+            }
+
+
+            
             }
 
             onenoteApp.UpdatePageContent(doc.ToString(), System.DateTime.MinValue);
@@ -173,7 +188,7 @@ namespace litingaddin
         }
         public void playlist_add(IRibbonControl control)
         {
-            Set_tags(control, "0", "【未开展】");
+            Set_tags(control, "1", "【未开展】");
         }
         public void Playlist_weiqueren(IRibbonControl control)
         {
@@ -218,21 +233,30 @@ namespace litingaddin
             var pageid = onenoteApp.Windows.CurrentWindow.CurrentPageId;
             onenoteApp.GetPageContent(pageid, out xml, OneNote.PageInfo.piAll);
             var doc = XDocument.Parse(xml);
-            XNamespace ns = doc.Root.Name.Namespace;            
+            XNamespace ns = doc.Root.Name.Namespace;
             //MessageBox.Show(TagDefs.ToString());
-            foreach (XElement Outlines in from node in doc.Descendants(ns + "Outline") select node)
+            string new_time = DateTime.Now.ToString("yyyy-MM-ddThh:mm:ss.fffZ");
+            foreach (XElement Outlines in from node in doc.Descendants(ns + "Outline").ToList() select node)
             {
                 string OutLine_data = Outlines.Descendants(ns + "T").FirstOrDefault().Value.ToString();
-                if (String.IsNullOrEmpty(OutLine_data))
+                int OutLine_count = Outlines.Descendants(ns + "T").Count();
+                if (String.IsNullOrEmpty(OutLine_data) && (OutLine_count == 1) )
                 {
-                    Outlines.RemoveAll(); 
+                    Outlines.Remove();
                 }
                 else
                 {
-                    break;
+                    doc.Descendants(ns + "Page").FirstOrDefault().Attribute("lastModifiedTime").Value = new_time;
+                    Outlines.Attribute("lastModifiedTime").Value = new_time;
+                    XElement Positions = Outlines.Descendants(ns + "Position").FirstOrDefault();
+                    Positions.Attribute("z").Value = "0";
+                    XElement OEs = Outlines.Descendants(ns + "OE").FirstOrDefault();
+                    OEs.Attribute("creationTime").Value = new_time;
+                    OEs.Attribute("lastModifiedTime").Value = new_time;
                 }
             }
             onenoteApp.UpdatePageContent(doc.ToString(), System.DateTime.MinValue);
+            MessageBox.Show(doc.ToString());
         }
 
         public void Tongyi_data(IRibbonControl control)
@@ -253,11 +277,30 @@ namespace litingaddin
                 else
                 {
                     XElement Positions = Outlines.Descendants(ns + "Position").FirstOrDefault();
-                    Positions.Attribute("x").Value= "34.80000000000000";
-                    Positions.Attribute("y").Value= "73.30000000000000";
+                    Positions.Attribute("x").Value= "36.00000000000000";
+                    Positions.Attribute("y").Value= "103.30000000000000";
                     XElement Sizes = Outlines.Descendants(ns + "Size").FirstOrDefault();
+                    string Size_w = Sizes.Attribute("width").Value;
+                    string Size_h = Sizes.Attribute("height").Value;
+                    double Size_w_int = double.Parse(Size_w);
+                    double Size_h_int = double.Parse(Size_h);
+                    double Size_chu = Size_h_int / Size_w_int;
                     Sizes.Attribute("width").Value = "778.40000000000000";
-                    Sizes.Attribute("height").Value = Sizes.Attribute("height").Value;
+                    string Size_h_after = (778.4 * Size_chu).ToString();
+                    Sizes.Attribute("height").Value = Size_h_after;
+                    try
+                    {
+                        Sizes.Add(new XAttribute("isSetByUser", "true"));
+                    }
+                    catch (Exception)
+                    {
+                        break;
+                    }
+                    finally
+                    {
+                        Sizes.Attribute("isSetByUser").Value = "true";
+                    }
+                    
                     //int OEs_count = Outlines.Descendants(ns + "OE").Count();
                     //MessageBox.Show(OEs_count.ToString());
                     //if (OEs_count > 1)

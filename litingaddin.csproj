@@ -66,7 +66,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="onenote_bat\restartonenote.bat" />
     <None Include="Properties\DataSources\Class1.datasource" />
+    <None Include="README.md" />
     <None Include="Resources\title%404x.png" />
     <None Include="Resources\playlist_add.png" />
     <None Include="Resources\playlist_add_check.png" />

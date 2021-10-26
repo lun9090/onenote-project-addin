@@ -5,8 +5,10 @@ onenote项目管理插件
 
 # 功能清单
 
-- 更新OneNote标记到标题，格式：{标记}｜...｜{标题}。已经开发完成。
-- 选择标题，设置未开展标记，并更新标记到标题。2021年10月20日已经开发完成。
+- 更新OneNote标记到标题，格式：{标记}｜...｜{标题}。
+  - 优化完成后，无需选择标题。
+- 设置标记，并更新标记到标题。开发完成。
+- 优化现有功能，删除多余块目前存在问题
 
 # 特别说明
 
@@ -45,6 +47,8 @@ onenote项目管理插件
 
 - C# 使用XDocument实现读取、添加，修改XML文件：https://www.cnblogs.com/haosit/p/6801420.html
 
+- 从XDocument中删除节点：https://www.thinbug.com/q/3215470
+
 - c# – 向Xdocument添加新的XElement：http://www.voidcn.com/article/p-bnooxczw-bvm.html
 
 - 图标来源：https://iconstore.co/
@@ -80,9 +84,22 @@ onenote项目管理插件
 
 - C#中判断字符串为空的几种方法的比较：https://blog.csdn.net/biaobiao1217/article/details/39047963
 
+- 使用cmd启动exe文件：https://blog.csdn.net/wl724120268/article/details/84846884
+
+- C#中string转成int类型：https://blog.csdn.net/shengyingpo/article/details/76618681
+
+- 如何把字符串转换成数字(带小数)：https://bbs.csdn.net/topics/290040564?list=977565
+
+- C# winform 用textbox显示文本 如何把光标定位到指定的位置：https://www.cnblogs.com/winformasp/articles/11903572.html
+
+- C# 教程：https://www.runoob.com/csharp/csharp-tutorial.html
+
+- C#各种异常处理方式：https://www.cnblogs.com/darrenji/p/3965443.html
+
   
 
   
+
 
 
 
