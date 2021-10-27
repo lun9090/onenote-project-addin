@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using OneNote = Microsoft.Office.Interop.OneNote;
@@ -225,7 +226,10 @@ namespace litingaddin
         {
             Set_tags(control, "9", "【已转需补充】");
         }
-
+        public class OutLines_del
+        {
+            public string OutLines_del_data;
+        }
         public void Del_none(IRibbonControl control)
         {
             OneNote.Application onenoteApp = new OneNote.Application();
@@ -236,27 +240,25 @@ namespace litingaddin
             XNamespace ns = doc.Root.Name.Namespace;
             //MessageBox.Show(TagDefs.ToString());
             string new_time = DateTime.Now.ToString("yyyy-MM-ddThh:mm:ss.fffZ");
+            var OutLines_dels = new List<OutLines_del>();
             foreach (XElement Outlines in from node in doc.Descendants(ns + "Outline").ToList() select node)
             {
                 string OutLine_data = Outlines.Descendants(ns + "T").FirstOrDefault().Value.ToString();
                 int OutLine_count = Outlines.Descendants(ns + "T").Count();
                 if (String.IsNullOrEmpty(OutLine_data) && (OutLine_count == 1) )
                 {
-                    Outlines.Remove();
+                    string ObjectIDs = Outlines.Attribute("objectID").Value;
+                    OutLines_dels.Add(new OutLines_del() { OutLines_del_data = ObjectIDs });
                 }
                 else
                 {
-                    doc.Descendants(ns + "Page").FirstOrDefault().Attribute("lastModifiedTime").Value = new_time;
-                    Outlines.Attribute("lastModifiedTime").Value = new_time;
-                    XElement Positions = Outlines.Descendants(ns + "Position").FirstOrDefault();
-                    Positions.Attribute("z").Value = "0";
-                    XElement OEs = Outlines.Descendants(ns + "OE").FirstOrDefault();
-                    OEs.Attribute("creationTime").Value = new_time;
-                    OEs.Attribute("lastModifiedTime").Value = new_time;
+                    continue;
                 }
             }
-            onenoteApp.UpdatePageContent(doc.ToString(), System.DateTime.MinValue);
-            MessageBox.Show(doc.ToString());
+            foreach (var OutLines_del_datas in OutLines_dels.ToList())
+            {
+                onenoteApp.DeletePageContent(pageid, OutLines_del_datas.OutLines_del_data.ToString(), System.DateTime.MinValue);
+            }
         }
 
         public void Tongyi_data(IRibbonControl control)
