@@ -73,7 +73,7 @@ namespace litingaddin
                 string outLine_titles_one = outLine_titles_all.Value;
                 if (string.IsNullOrEmpty(outLine_titles_one))
                 {
-                    break;
+                    continue;
                 }
                 else
                 {
@@ -87,11 +87,11 @@ namespace litingaddin
                         var outLine_tag = tags.Attribute("name").Value.ToString();
                         if (outLine_tag == "Page Tags")
                         {
-                            break;
+                            continue;
                         }
                         else if (outLine_titles_all.Value.Contains(outLine_tag) == true)
                         {
-                            break;
+                            continue;
                         }
                         else if (outLine_titles_all.Value.Contains(outLine_tag) == false)
                         {
@@ -102,19 +102,75 @@ namespace litingaddin
                             outLine_titles_all.Value = outLine_tag + "｜" + outLine_titles_all.Value;
                         }
                     }
+                }
             }
-
-
-            
-            }
-
             onenoteApp.UpdatePageContent(doc.ToString(), System.DateTime.MinValue);
         }
         public void update_tittle(IRibbonControl control)
         {
             update_tittle_all();
         }
-        public static void Set_tags(IRibbonControl control,string p_type,string p_name)
+        public static void Del_tags(IRibbonControl control, string p_name)
+        {
+            OneNote.Application onenoteApp = new OneNote.Application();
+            string xml;
+            var pageid = onenoteApp.Windows.CurrentWindow.CurrentPageId;
+            onenoteApp.GetPageContent(pageid, out xml, OneNote.PageInfo.piAll);
+            var doc = XDocument.Parse(xml);
+            XNamespace ns = doc.Root.Name.Namespace;
+            try
+            {
+                XElement Indexs = doc.Descendants(ns + "TagDef").Where(xe => xe.Attribute("name").Value == p_name).FirstOrDefault();
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                XElement Indexs = doc.Descendants(ns + "TagDef").Where(xe => xe.Attribute("name").Value == p_name).FirstOrDefault();
+                string p_index = Indexs.Attribute("index").Value;
+                doc.Descendants(ns + "Tag").Where(xe => xe.Attribute("index") != null && xe.Attribute("index").Value == p_index).Remove();
+                doc.Descendants(ns + "TagDef").Where(xe => xe.Attribute("name") != null && xe.Attribute("name").Value == p_name).Remove();
+                onenoteApp.UpdatePageContent(doc.ToString(), System.DateTime.MinValue);
+                update_tittle_all();
+            }
+
+
+        }
+        public void Del_all_tags(IRibbonControl control)
+        {
+            OneNote.Application onenoteApp = new OneNote.Application();
+            string xml;
+            var pageid = onenoteApp.Windows.CurrentWindow.CurrentPageId;
+            onenoteApp.GetPageContent(pageid, out xml, OneNote.PageInfo.piAll);
+            var doc = XDocument.Parse(xml);
+            XNamespace ns = doc.Root.Name.Namespace;
+            try
+            {
+                XElement Indexs = doc.Descendants(ns + "TagDef").Where(xe => xe.Attribute("name") != null).FirstOrDefault();
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                foreach (XElement TagDefs in doc.Descendants(ns + "TagDef").ToList())
+                {
+                    TagDefs.Remove();
+                }
+                foreach (XElement Tags in doc.Descendants(ns + "Tag").ToList())
+                {
+                    Tags.Remove();
+                }
+                onenoteApp.UpdatePageContent(doc.ToString(), System.DateTime.MinValue);
+                update_tittle_all();
+            }
+
+
+        }
+        public static void Set_tags(IRibbonControl control, string p_type, string p_name)
         {
             OneNote.Application onenoteApp = new OneNote.Application();
             string xml;
@@ -180,51 +236,96 @@ namespace litingaddin
                 //MessageBox.Show(doc.ToString());
                 onenoteApp.UpdatePageContent(doc.ToString(), System.DateTime.MinValue);
             }
-
             update_tittle_all();
         }
-        public void Playlist_kaizhanzhong(IRibbonControl control)
+        public void Playlist_add_kaizhanzhong(IRibbonControl control)
         {
-            Set_tags(control,"0", "【开展中】");
+            Set_tags(control, "0", "【开展中】");
         }
-        public void playlist_add(IRibbonControl control)
+        public void Playlist_del_kaizhanzhong(IRibbonControl control)
+        {
+            Del_tags(control, "【开展中】");
+        }
+        public void playlist_add_add(IRibbonControl control)
         {
             Set_tags(control, "1", "【未开展】");
         }
-        public void Playlist_weiqueren(IRibbonControl control)
+        public void playlist_del_add(IRibbonControl control)
+        {
+            Del_tags(control, "【未开展】");
+        }
+        public void Playlist_add_weiqueren(IRibbonControl control)
         {
             Set_tags(control, "2", "【未确认】");
         }
-
-        public void Playlist_zuofei(IRibbonControl control)
+        public void Playlist_del_weiqueren(IRibbonControl control)
+        {
+            Del_tags(control, "【未确认】");
+        }
+        public void Playlist_add_zuofei(IRibbonControl control)
         {
             Set_tags(control, "3", "【作废】");
         }
-        public void Playlist_daisheji(IRibbonControl control)
+        public void Playlist_del_zuofei(IRibbonControl control)
+        {
+            Del_tags(control, "【作废】");
+        }
+        public void Playlist_add_daisheji(IRibbonControl control)
         {
             Set_tags(control, "4", "【待设计】");
         }
-        public void Playlist_weizhuan(IRibbonControl control)
+        public void Playlist_del_daisheji(IRibbonControl control)
+        {
+            Del_tags(control, "【待设计】");
+        }
+        public void Playlist_add_weizhuan(IRibbonControl control)
         {
             Set_tags(control, "5", "【未转】");
         }
-        public void Playlist_hebing(IRibbonControl control)
+        public void Playlist_del_weizhuan(IRibbonControl control)
+        {
+            Del_tags(control, "【未转】");
+        }
+        public void Playlist_add_hebing(IRibbonControl control)
         {
             Set_tags(control, "6", "【合并】");
         }
-        public void Playlist_yizhuan(IRibbonControl control)
+        public void Playlist_del_hebing(IRibbonControl control)
+        {
+            Del_tags(control, "【合并】");
+        }
+        public void Playlist_add_yizhuan(IRibbonControl control)
         {
             Set_tags(control, "7", "【已转】");
         }
-
-        public void Playlist_zanbukaizhan(IRibbonControl control)
+        public void Playlist_del_yizhuan(IRibbonControl control)
+        {
+            Del_tags(control, "【已转】");
+        }
+        public void Playlist_add_zanbukaizhan(IRibbonControl control)
         {
             Set_tags(control, "8", "【暂不开展】");
         }
+        public void Playlist_del_zanbukaizhan(IRibbonControl control)
+        {
+            Del_tags(control, "【暂不开展】");
+        }
 
-        public void Playlist_yizhuanxubuchong(IRibbonControl control)
+        public void Playlist_add_yizhuanxubuchong(IRibbonControl control)
         {
             Set_tags(control, "9", "【已转需补充】");
+        }
+        public void Playlist_del_yizhuanxubuchong(IRibbonControl control)
+        {
+            Del_tags(control, "【已转需补充】");
+        }
+        public void Playlist_add_yiwancheng(IRibbonControl control)
+        {
+            Set_tags(control, "10", "【已完成】");
+        }
+        public void Playlist_del_yiwancheng(IRibbonControl control)
+        {
+            Del_tags(control, "【已完成】");
         }
         public class OutLines_del
         {
@@ -245,7 +346,7 @@ namespace litingaddin
             {
                 string OutLine_data = Outlines.Descendants(ns + "T").FirstOrDefault().Value.ToString();
                 int OutLine_count = Outlines.Descendants(ns + "T").Count();
-                if (String.IsNullOrEmpty(OutLine_data) && (OutLine_count == 1) )
+                if (String.IsNullOrEmpty(OutLine_data) && (OutLine_count == 1))
                 {
                     string ObjectIDs = Outlines.Attribute("objectID").Value;
                     OutLines_dels.Add(new OutLines_del() { OutLines_del_data = ObjectIDs });
@@ -279,8 +380,8 @@ namespace litingaddin
                 else
                 {
                     XElement Positions = Outlines.Descendants(ns + "Position").FirstOrDefault();
-                    Positions.Attribute("x").Value= "36.00000000000000";
-                    Positions.Attribute("y").Value= "103.30000000000000";
+                    Positions.Attribute("x").Value = "36.00000000000000";
+                    Positions.Attribute("y").Value = "103.30000000000000";
                     XElement Sizes = Outlines.Descendants(ns + "Size").FirstOrDefault();
                     string Size_w = Sizes.Attribute("width").Value;
                     string Size_h = Sizes.Attribute("height").Value;
@@ -302,7 +403,7 @@ namespace litingaddin
                     {
                         Sizes.Attribute("isSetByUser").Value = "true";
                     }
-                    
+
                     //int OEs_count = Outlines.Descendants(ns + "OE").Count();
                     //MessageBox.Show(OEs_count.ToString());
                     //if (OEs_count > 1)

@@ -3,25 +3,43 @@
 	<ribbon>
 		<tabs>
 			<tab id="bianji1" label="项目管理">
-				<group id="groupbianji" label="状态管理">
-					<button id="update_tittle" label="更新标题状态" size="large" onAction="update_tittle" image="update_title.png" />
+				<group id="groupbianji" label="标记管理">
+					<button id="update_tittle" label="更新标题标记" size="large" onAction="update_tittle" image="update_title.png" />
+					<menu id="rxboxCustom_add" label="新增标记">	
+						<button id="playlist_add_add" label="【未开展】" onAction="playlist_add_add" />
+						<button id="Playlist_add_kaizhanzhong" label="【开展中】"  onAction="Playlist_add_kaizhanzhong" />
+						<button id="Playlist_add_weiqueren" label="【未确认】" onAction="Playlist_add_weiqueren" />
+						<button id="Playlist_add_zuofei" label="【作废】" onAction="Playlist_add_zuofei" />
+						<button id="Playlist_add_daisheji" label="【待设计】" onAction="Playlist_add_daisheji" />
+						<button id="Playlist_add_weizhuan" label="【未转】" onAction="Playlist_add_weizhuan" />
+						<button id="Playlist_add_hebing" label="【合并】" onAction="Playlist_add_hebing" />
+						<button id="Playlist_add_yizhuan" label="【已转】" onAction="Playlist_add_yizhuan" />
+						<button id="Playlist_add_zanbukaizhan" label="【暂不开展】" onAction="Playlist_add_zanbukaizhan" />
+						<button id="Playlist_add_yizhuanxubuchong" label="【已转需补充】" onAction="Playlist_add_yizhuanxubuchong" />
+						<button id="Playlist_add_yiwancheng" label="【已完成】" onAction="Playlist_add_yiwancheng" />
+					</menu>
+					<menu id="rxboxCustom_del" label="删除标记">
+						<button id="playlist_del_add" label="【未开展】" onAction="playlist_del_add" />
+						<button id="Playlist_del_kaizhanzhong" label="【开展中】"  onAction="Playlist_del_kaizhanzhong" />
+						<button id="Playlist_del_weiqueren" label="【未确认】" onAction="Playlist_del_weiqueren" />
+						<button id="Playlist_del_zuofei" label="【作废】" onAction="Playlist_del_zuofei" />
+						<button id="Playlist_del_daisheji" label="【待设计】" onAction="Playlist_del_daisheji" />
+						<button id="Playlist_del_weizhuan" label="【未转】" onAction="Playlist_del_weizhuan" />
+						<button id="Playlist_del_hebing" label="【合并】" onAction="Playlist_del_hebing" />
+						<button id="Playlist_del_yizhuan" label="【已转】" onAction="Playlist_del_yizhuan" />
+						<button id="Playlist_del_zanbukaizhan" label="【暂不开展】" onAction="Playlist_del_zanbukaizhan" />
+						<button id="Playlist_del_yizhuanxubuchong" label="【已转需补充】" onAction="Playlist_del_yizhuanxubuchong" />
+						<button id="Playlist_del_yiwancheng" label="【已完成】" onAction="Playlist_del_yiwancheng" />
+					</menu>
+					<button id="Del_all_tags" label="删除所有标记" onAction="Del_all_tags" />
+				</group>
+				<group id="groupzonghe" label="综合管理">
 					<button id="allin_xml" label="查看xml" size="normal" onAction="allin_xml" image="playlist_add.png" />
+				</group>
+				<group id="grouppage" label="页面管理">
 					<button id="Del_none" label="删空数据" size="normal" onAction="Del_none" image="playlist_add.png" />
 					<button id="Tongyi_data" label="统一数据位置" size="normal" onAction="Tongyi_data" image="playlist_add.png" />
-					<menu id="rxboxCustom" label="状态列表">	
-						<button id="playlist_add" label="【未开展】" onAction="playlist_add" />
-						<button id="Playlist_kaizhanzhong" label="【开展中】"  onAction="Playlist_kaizhanzhong" />
-						<button id="Playlist_weiqueren" label="【未确认】" onAction="Playlist_weiqueren" />
-						<button id="Playlist_zuofei" label="【作废】" onAction="Playlist_zuofei" />
-						<button id="Playlist_daisheji" label="【待设计】" onAction="Playlist_daisheji" />
-						<button id="Playlist_weizhuan" label="【未转】" onAction="Playlist_weizhuan" />
-						<button id="Playlist_hebing" label="【合并】" onAction="Playlist_hebing" />
-						<button id="Playlist_yizhuan" label="【已转】" onAction="Playlist_yizhuan" />
-						<button id="Playlist_zanbukaizhan" label="【暂不开展】" onAction="Playlist_zanbukaizhan" />
-						<button id="Playlist_yizhuanxubuchong" label="【已转需补充】" onAction="Playlist_yizhuanxubuchong" />
-					</menu>
 				</group>
-				
 			</tab>
 		</tabs>
 	</ribbon>
