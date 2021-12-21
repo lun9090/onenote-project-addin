@@ -65,7 +65,7 @@ onenote项目管理插件
 
 ## 开发环境
 
-- Microsoft Visual Studio Community 2019 版本 16.11.4
+- Microsoft Visual Studio Community 2022 (64 位) 
   - Microsoft Visual Studio Installer Projects
   - .NET Framework 4.8
 - Microsoft® OneNote® 适用于 Microsoft 365 MSO (16.0.14228.20288) 64 位

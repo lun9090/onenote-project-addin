@@ -494,6 +494,7 @@ namespace litingaddin
             box1.textBox1.AppendText(doc.ToString());
             Application.Run(box1);
         }
+        
         class CCOMStreamWrapper : IStream
         {
             public CCOMStreamWrapper(System.IO.Stream streamWrap)
