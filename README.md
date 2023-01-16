@@ -3,6 +3,8 @@ onenote项目管理插件
 ## 背景
 本人一直想找一个能对工作项状态进行管理，能够描述文字，又能在文字下面保存文件的笔记，一直用印象笔记很多年，今年用印象笔记不好用，感觉很臃肿，而且很慢，功能限制太厉害，最终选择了OneNote，找了很多插件，目前在用的插件有onemore和OnenoteTaggingKit插件，onemore用的比较多的两个功能是查看xml和样式功能，OnenoteTaggingKit不能满足我的需求，我需要在标题上能看到标签，所以想到了自己开发。
 
+最近使用MyJournal.Notebook比较多，作为每天记录的一个工具，因为我是用的是office365企业账号，该插件对企业级的onenote支持不好，为了不影响使用，我自己做了一个小的功能新增，新增笔记本，点击后，在原有数据的基础上，创建当日的页，因为时间紧，只是实现了创建页，后面会慢慢更新创建笔记本，创建节组，创建节的功能，如果想体验，需先手工创建笔记本My Journal，分区组(2023),分区（一月），然后点击创建日记页，就能创建当天的日记页了。
+
 # 功能清单
 
 - 标记管理
@@ -10,6 +12,7 @@ onenote项目管理插件
   - 更新标题标记
 
     > 格式：{标记}｜...｜{标题}。
+    > 标记管理：插件可以配合onenote的标记功能使用，可以设置标记，设置后，点击更新标题标记即可
 
   - 新增标记
 
@@ -59,6 +62,9 @@ onenote项目管理插件
     >
     > 需要优化增加多个含有内容块场景
 
+- 日记管理
+    - 创建日志页
+    > 如果想体验，需先手工创建笔记本My Journal，分区组(2023),分区（一月），然后点击创建日记页，创建当天的日记页
 # 特别说明
 
 本工具根据个人工作需要开发，有其他需求的，可以留言。
@@ -152,6 +158,7 @@ onenote项目管理插件
 - C# 循环break 和continue：https://www.cnblogs.com/winward996/p/11502481.html
 
 - 如何使用XDocument删除节点和子节点(How to delete nodes and subnodes using XDocument)：https://www.it1352.com/1558565.html
+- 如何使用C＃和OneNote编写OneNote 2013页面Interop：http://www.uwenku.com/question/p-vqhdgzgz-bbm.html
 
   
 

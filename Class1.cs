@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -494,7 +495,87 @@ namespace litingaddin
             box1.textBox1.AppendText(doc.ToString());
             Application.Run(box1);
         }
-        
+        public void riji_create_page(IRibbonControl control)
+        {
+            // 获取当前日期
+            var date = DateTime.Now.ToString("yyyy-MM-dd");
+            var date_year= DateTime.Now.ToString("yyyy");
+            var date_mouth= DateTime.Now.ToString("MMMM", new CultureInfo("zh-CN"));
+
+            var application = new OneNote.Application();
+            // Get info from OneNote 
+            string xml;
+            application.GetHierarchy(null, OneNote.HierarchyScope.hsSections, out xml);
+            XDocument doc = XDocument.Parse(xml);
+            XNamespace ns = doc.Root.Name.Namespace;
+
+            // Assuming you have a notebook called "Test" 
+            XElement notebook = doc.Root.Elements(ns + "Notebook").Where(x => x.Attribute("name").Value == "My Journal").FirstOrDefault();
+            if (notebook == null)
+            {
+                MessageBox.Show("Did not find notebook titled 'My Journal'. Aborting.");
+                return;
+            }
+
+
+           // If there is a section, just use the first one we encounter 
+           XElement section_year = notebook.Elements(ns + "SectionGroup").Where(x => x.Attribute("name").Value == date_year).FirstOrDefault(); 
+            if (section_year == null)
+            {
+                MessageBox.Show("Did not find SectionGroup titled " + date_year + ". Aborting.");
+            }
+            /*else
+            {
+                var notebookXml = "<one:Notebook name='My Journal'>" +
+                              "<one:SectionGroup name='" + date_year + "'>" +
+                              "</one:SectionGroup>" +
+                          "</one:Notebook>";
+                application.UpdateHierarchy(notebookXml);
+            }*/
+            XElement section_mouth = section_year.Elements(ns + "Section").Where(x => x.Attribute("name").Value == date_mouth).FirstOrDefault(); 
+            if (section_mouth == null)
+            {
+                MessageBox.Show("Did not find Section titled " + date_mouth + ". Aborting.");
+            }
+            /*else
+            {
+                var notebookXml = "<one:Notebook name='My Journal'>" +
+                              "<one:SectionGroup name='" + date_year + "'>" +
+                                  "<one:Section name='" + date_mouth + "'>" +
+                                  "</one:Section>" +
+                              "</one:Section>" +
+                          "</one:Notebook>";
+                application.UpdateHierarchy(notebookXml);
+            }*/
+            // Create a page 
+
+            string newPageID;
+            application.CreateNewPage(section_mouth.Attribute("ID").Value, out newPageID);
+
+            //MessageBox.Show(newPageID);
+            // Create the page element using the ID of the new page OneNote just created 
+            XElement newPage = new XElement(ns + "Page");
+            newPage.SetAttributeValue("ID", newPageID);
+
+            
+
+            // Add a title just for grins 
+            newPage.Add(new XElement(ns + "Title",
+                new XElement(ns + "OE",
+                 new XElement(ns + "T",
+                  new XCData(date)))));
+            // Add an outline and text content 
+            newPage.Add(new XElement(ns + "Outline",
+                new XElement(ns + "OEChildren",
+                 new XElement(ns + "OE",
+                  new XElement(ns + "T",
+                   new XCData(""))))));
+            // 创建 OneNote 页
+            //MessageBox.Show(newPage.ToString());
+            application.UpdatePageContent(newPage.ToString());
+
+
+        }
         class CCOMStreamWrapper : IStream
         {
             public CCOMStreamWrapper(System.IO.Stream streamWrap)
