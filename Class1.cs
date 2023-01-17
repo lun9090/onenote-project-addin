@@ -504,30 +504,56 @@ namespace litingaddin
             var date_mouth= DateTime.Now.ToString("MMMM", new CultureInfo("zh-CN"));
 
             var application = new OneNote.Application();
+            String onenote_file;
+            application.GetSpecialLocation((OneNote.SpecialLocation)2, out onenote_file);
             // Get info from OneNote 
             string xml;
             application.GetHierarchy(null, OneNote.HierarchyScope.hsSections, out xml);
             XDocument doc = XDocument.Parse(xml);
             XNamespace ns = doc.Root.Name.Namespace;
 
+            
             // Assuming you have a notebook called "Test" 
             XElement notebook = doc.Root.Elements(ns + "Notebook").Where(x => x.Attribute("name").Value == "My Journal").FirstOrDefault();
             if (notebook == null)
             {
-                MessageBox.Show("Did not find notebook titled 'My Journal'. Aborting.");
-                return;
+                String strID_1;
+                String notebook_string;
+                //MessageBox.Show(onenote_file + "\\My Journal\\" + date_year + "\\" + date_mouth + ".one");
+                application.OpenHierarchy(onenote_file + "\\My Journal\\",
+                System.String.Empty, out strID_1, OneNote.CreateFileType.cftNotebook);
+                application.GetHierarchy(strID_1, OneNote.HierarchyScope.hsNotebooks, out notebook_string);
+                notebook = XElement.Parse(notebook_string);
             }
-           // If there is a section, just use the first one we encounter 
-           XElement section_year = notebook.Elements(ns + "SectionGroup").Where(x => x.Attribute("name").Value == date_year).FirstOrDefault(); 
+
+
+
+            // If there is a section, just use the first one we encounter 
+            XElement section_year = notebook.Elements(ns + "SectionGroup").Where(x => x.Attribute("name").Value == date_year).FirstOrDefault();
             if (section_year == null)
             {
-                MessageBox.Show("Did not find SectionGroup titled " + date_year + ". Aborting.");
+                String strID_2;
+                String section_year_string;
+                //MessageBox.Show(onenote_file + "\\My Journal\\" + date_year + "\\" + date_mouth + ".one");
+                application.OpenHierarchy(onenote_file + "\\My Journal\\" + date_year + "\\",
+                System.String.Empty, out strID_2, OneNote.CreateFileType.cftFolder);
+
+                application.GetHierarchy(strID_2, OneNote.HierarchyScope.hsSections, out section_year_string);
+                section_year = XElement.Parse(section_year_string);
             }
-            XElement section_mouth = section_year.Elements(ns + "Section").Where(x => x.Attribute("name").Value == date_mouth).FirstOrDefault(); 
+
+
+            XElement section_mouth = section_year.Elements(ns + "Section").Where(x => x.Attribute("name").Value == date_mouth).FirstOrDefault();
             if (section_mouth == null)
             {
-                MessageBox.Show("Did not find Section titled " + date_mouth + ". Aborting.");
-                
+                String strID_3;
+                String section_mouth_string;
+                //MessageBox.Show(onenote_file + "\\My Journal\\" + date_year + "\\" + date_mouth + ".one");
+                application.OpenHierarchy(onenote_file + "\\My Journal\\" + date_year + "\\" + date_mouth + ".one",
+                System.String.Empty, out strID_3, OneNote.CreateFileType.cftSection);
+                application.GetHierarchy(strID_3, OneNote.HierarchyScope.hsSections, out section_mouth_string);
+                section_mouth = XElement.Parse(section_mouth_string);
+
             }
             // Create a page 
             XElement section_day = section_mouth.Elements(ns + "Section").Where(x => x.Attribute("name").Value == date).FirstOrDefault();
@@ -570,6 +596,8 @@ namespace litingaddin
             var date_mouth = DateTime.Now.ToString("MMMM", new CultureInfo("zh-CN"));
 
             var application = new OneNote.Application();
+            String onenote_file;
+            application.GetSpecialLocation((OneNote.SpecialLocation)2, out onenote_file);
             // Get info from OneNote 
             string xml;
             application.GetHierarchy(null, OneNote.HierarchyScope.hsSections, out xml);
@@ -580,40 +608,49 @@ namespace litingaddin
             XElement notebook = doc.Root.Elements(ns + "Notebook").Where(x => x.Attribute("name").Value == "My Project Journal").FirstOrDefault();
             if (notebook == null)
             {
-                //使用XmlDocument创建xml
-                XmlDocument xmldoc = new XmlDocument();
-                XmlDeclaration xmldec = xmldoc.CreateXmlDeclaration("1.0","","");
-                xmldoc.AppendChild(xmldec);
-                //添加根节点
-                XmlElement rootElement = xmldoc.CreateElement("one:Notebooks");
-                xmldoc.AppendChild(rootElement);
-                //添加根节点下的子节点元素
-                XmlElement classElement = xmldoc.CreateElement("one:Notebook");
-                rootElement.AppendChild(classElement);
-                XmlAttribute atrrClass = xmldoc.CreateAttribute("name");
-                atrrClass.Value = "My Project Journal";
-                classElement.Attributes.Append(atrrClass);
-                MessageBox.Show(xmldoc.ToString());
-                application.UpdateHierarchy(xmldoc.ToString());
-
+                String strID_1;
+                String notebook_string;
+                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
+                application.OpenHierarchy(onenote_file + "\\My Project Journal\\",
+                System.String.Empty, out strID_1, OneNote.CreateFileType.cftNotebook);
+                application.GetHierarchy(strID_1, OneNote.HierarchyScope.hsNotebooks, out notebook_string);
+                notebook = XElement.Parse(notebook_string);
             }
+
 
 
             // If there is a section, just use the first one we encounter 
             XElement section_year = notebook.Elements(ns + "SectionGroup").Where(x => x.Attribute("name").Value == date_year).FirstOrDefault();
             if (section_year == null)
             {
-                MessageBox.Show("Did not find SectionGroup titled " + date_year + ". Aborting.");
+                String strID_2;
+                String section_year_string;
+                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
+                application.OpenHierarchy(onenote_file + "\\My Project Journal\\" + date_year + "\\",
+                System.String.Empty, out strID_2, OneNote.CreateFileType.cftFolder);
+
+                application.GetHierarchy(strID_2, OneNote.HierarchyScope.hsSections, out section_year_string);
+                section_year = XElement.Parse(section_year_string);
             }
+
+
             XElement section_mouth = section_year.Elements(ns + "Section").Where(x => x.Attribute("name").Value == date_mouth).FirstOrDefault();
             if (section_mouth == null)
             {
-                MessageBox.Show("Did not find Section titled " + date_mouth + ". Aborting.");
+                String strID_3;
+                String section_mouth_string;
+                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
+                application.OpenHierarchy(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one",
+                System.String.Empty, out strID_3, OneNote.CreateFileType.cftSection);
+                application.GetHierarchy(strID_3, OneNote.HierarchyScope.hsSections, out section_mouth_string);
+                section_mouth = XElement.Parse(section_mouth_string);
 
             }
+
+
             // Create a page 
             XElement section_day = section_mouth.Elements(ns + "Section").Where(x => x.Attribute("name").Value == date).FirstOrDefault();
-            if (section_mouth == null)
+            if (section_day == null)
             {
                 string newPageID;
                 application.CreateNewPage(section_mouth.Attribute("ID").Value, out newPageID);
