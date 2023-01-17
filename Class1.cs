@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Threading;
 using System.Windows.Forms;
+using System.Xml;
 using System.Xml.Linq;
 using OneNote = Microsoft.Office.Interop.OneNote;
 
@@ -516,63 +517,129 @@ namespace litingaddin
                 MessageBox.Show("Did not find notebook titled 'My Journal'. Aborting.");
                 return;
             }
-
-
            // If there is a section, just use the first one we encounter 
            XElement section_year = notebook.Elements(ns + "SectionGroup").Where(x => x.Attribute("name").Value == date_year).FirstOrDefault(); 
             if (section_year == null)
             {
                 MessageBox.Show("Did not find SectionGroup titled " + date_year + ". Aborting.");
             }
-            /*else
-            {
-                var notebookXml = "<one:Notebook name='My Journal'>" +
-                              "<one:SectionGroup name='" + date_year + "'>" +
-                              "</one:SectionGroup>" +
-                          "</one:Notebook>";
-                application.UpdateHierarchy(notebookXml);
-            }*/
             XElement section_mouth = section_year.Elements(ns + "Section").Where(x => x.Attribute("name").Value == date_mouth).FirstOrDefault(); 
             if (section_mouth == null)
             {
                 MessageBox.Show("Did not find Section titled " + date_mouth + ". Aborting.");
+                
             }
-            /*else
-            {
-                var notebookXml = "<one:Notebook name='My Journal'>" +
-                              "<one:SectionGroup name='" + date_year + "'>" +
-                                  "<one:Section name='" + date_mouth + "'>" +
-                                  "</one:Section>" +
-                              "</one:Section>" +
-                          "</one:Notebook>";
-                application.UpdateHierarchy(notebookXml);
-            }*/
             // Create a page 
+            XElement section_day = section_mouth.Elements(ns + "Section").Where(x => x.Attribute("name").Value == date).FirstOrDefault();
+            if (section_mouth == null)
+            {
+                string newPageID;
+                application.CreateNewPage(section_mouth.Attribute("ID").Value, out newPageID);
 
-            string newPageID;
-            application.CreateNewPage(section_mouth.Attribute("ID").Value, out newPageID);
+                //MessageBox.Show(newPageID);
+                // Create the page element using the ID of the new page OneNote just created 
+                XElement newPage = new XElement(ns + "Page");
+                newPage.SetAttributeValue("ID", newPageID);
 
-            //MessageBox.Show(newPageID);
-            // Create the page element using the ID of the new page OneNote just created 
-            XElement newPage = new XElement(ns + "Page");
-            newPage.SetAttributeValue("ID", newPageID);
 
-            
 
-            // Add a title just for grins 
-            newPage.Add(new XElement(ns + "Title",
-                new XElement(ns + "OE",
-                 new XElement(ns + "T",
-                  new XCData(date)))));
-            // Add an outline and text content 
-            newPage.Add(new XElement(ns + "Outline",
-                new XElement(ns + "OEChildren",
-                 new XElement(ns + "OE",
-                  new XElement(ns + "T",
-                   new XCData(""))))));
-            // 创建 OneNote 页
-            //MessageBox.Show(newPage.ToString());
-            application.UpdatePageContent(newPage.ToString());
+                // Add a title just for grins 
+                newPage.Add(new XElement(ns + "Title",
+                    new XElement(ns + "OE",
+                     new XElement(ns + "T",
+                      new XCData(date)))));
+                // Add an outline and text content 
+                newPage.Add(new XElement(ns + "Outline",
+                    new XElement(ns + "OEChildren",
+                     new XElement(ns + "OE",
+                      new XElement(ns + "T",
+                       new XCData(""))))));
+                // 创建 OneNote 页
+                //MessageBox.Show(newPage.ToString());
+                application.UpdatePageContent(newPage.ToString());
+            }
+
+
+        }
+
+        public void create_my_riji(IRibbonControl control)
+        {
+            // 获取当前日期
+            var date = DateTime.Now.ToString("yyyy-MM-dd");
+            var date_year = DateTime.Now.ToString("yyyy");
+            var date_mouth = DateTime.Now.ToString("MMMM", new CultureInfo("zh-CN"));
+
+            var application = new OneNote.Application();
+            // Get info from OneNote 
+            string xml;
+            application.GetHierarchy(null, OneNote.HierarchyScope.hsSections, out xml);
+            XDocument doc = XDocument.Parse(xml);
+            XNamespace ns = doc.Root.Name.Namespace;
+
+            // Assuming you have a notebook called "Test" 
+            XElement notebook = doc.Root.Elements(ns + "Notebook").Where(x => x.Attribute("name").Value == "My Project Journal").FirstOrDefault();
+            if (notebook == null)
+            {
+                //使用XmlDocument创建xml
+                XmlDocument xmldoc = new XmlDocument();
+                XmlDeclaration xmldec = xmldoc.CreateXmlDeclaration("1.0","","");
+                xmldoc.AppendChild(xmldec);
+                //添加根节点
+                XmlElement rootElement = xmldoc.CreateElement("one:Notebooks");
+                xmldoc.AppendChild(rootElement);
+                //添加根节点下的子节点元素
+                XmlElement classElement = xmldoc.CreateElement("one:Notebook");
+                rootElement.AppendChild(classElement);
+                XmlAttribute atrrClass = xmldoc.CreateAttribute("name");
+                atrrClass.Value = "My Project Journal";
+                classElement.Attributes.Append(atrrClass);
+                MessageBox.Show(xmldoc.ToString());
+                application.UpdateHierarchy(xmldoc.ToString());
+
+            }
+
+
+            // If there is a section, just use the first one we encounter 
+            XElement section_year = notebook.Elements(ns + "SectionGroup").Where(x => x.Attribute("name").Value == date_year).FirstOrDefault();
+            if (section_year == null)
+            {
+                MessageBox.Show("Did not find SectionGroup titled " + date_year + ". Aborting.");
+            }
+            XElement section_mouth = section_year.Elements(ns + "Section").Where(x => x.Attribute("name").Value == date_mouth).FirstOrDefault();
+            if (section_mouth == null)
+            {
+                MessageBox.Show("Did not find Section titled " + date_mouth + ". Aborting.");
+
+            }
+            // Create a page 
+            XElement section_day = section_mouth.Elements(ns + "Section").Where(x => x.Attribute("name").Value == date).FirstOrDefault();
+            if (section_mouth == null)
+            {
+                string newPageID;
+                application.CreateNewPage(section_mouth.Attribute("ID").Value, out newPageID);
+
+                //MessageBox.Show(newPageID);
+                // Create the page element using the ID of the new page OneNote just created 
+                XElement newPage = new XElement(ns + "Page");
+                newPage.SetAttributeValue("ID", newPageID);
+
+
+
+                // Add a title just for grins 
+                newPage.Add(new XElement(ns + "Title",
+                    new XElement(ns + "OE",
+                     new XElement(ns + "T",
+                      new XCData(date)))));
+                // Add an outline and text content 
+                newPage.Add(new XElement(ns + "Outline",
+                    new XElement(ns + "OEChildren",
+                     new XElement(ns + "OE",
+                      new XElement(ns + "T",
+                       new XCData(""))))));
+                // 创建 OneNote 页
+                //MessageBox.Show(newPage.ToString());
+                application.UpdatePageContent(newPage.ToString());
+            }
 
 
         }

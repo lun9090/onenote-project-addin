@@ -42,6 +42,7 @@
 				</group>
 				<group id="riji" label="日记管理">
 					<button id="riji_create_page" label="创建日记页" size="normal" onAction="riji_create_page" image="playlist_add.png" />
+					<button id="create_my_riji" label="项目管理日记" size="normal" onAction="create_my_riji" image="playlist_add.png" />
 				</group>
 			</tab>
 		</tabs>
