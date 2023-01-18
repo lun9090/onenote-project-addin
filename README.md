@@ -1,4 +1,4 @@
-# onente-all-in-one
+# onenote-all-in-one
 onenote项目管理插件
 ## 背景
 本人一直想找一个能对工作项状态进行管理，能够描述文字，又能在文字下面保存文件的笔记，一直用印象笔记很多年，今年用印象笔记不好用，感觉很臃肿，而且很慢，功能限制太厉害，最终选择了OneNote，找了很多插件，目前在用的插件有onemore和OnenoteTaggingKit插件，onemore用的比较多的两个功能是查看xml和样式功能，OnenoteTaggingKit不能满足我的需求，我需要在标题上能看到标签，所以想到了自己开发。
