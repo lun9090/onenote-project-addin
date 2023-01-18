@@ -366,6 +366,7 @@ namespace litingaddin
 
         public void Tongyi_data(IRibbonControl control)
         {
+            Del_none(control);
             OneNote.Application onenoteApp = new OneNote.Application();
             string xml;
             var pageid = onenoteApp.Windows.CurrentWindow.CurrentPageId;
@@ -375,36 +376,49 @@ namespace litingaddin
             foreach (XElement Outlines in from node in doc.Descendants(ns + "Outline") select node)
             {
                 string OutLine_data = Outlines.Descendants(ns + "T").FirstOrDefault().Value.ToString();
+                
                 if (String.IsNullOrEmpty(OutLine_data))
                 {
                     break;
                 }
                 else
                 {
-                    XElement Positions = Outlines.Descendants(ns + "Position").FirstOrDefault();
-                    Positions.Attribute("x").Value = "36.00000000000000";
-                    Positions.Attribute("y").Value = "103.30000000000000";
-                    XElement Sizes = Outlines.Descendants(ns + "Size").FirstOrDefault();
-                    string Size_w = Sizes.Attribute("width").Value;
-                    string Size_h = Sizes.Attribute("height").Value;
-                    double Size_w_int = double.Parse(Size_w);
-                    double Size_h_int = double.Parse(Size_h);
-                    double Size_chu = Size_h_int / Size_w_int;
-                    Sizes.Attribute("width").Value = "778.40000000000000";
-                    string Size_h_after = (778.4 * Size_chu).ToString();
-                    Sizes.Attribute("height").Value = Size_h_after;
-                    try
+                    foreach (XElement OutLine_Metas in from node1 in Outlines.Descendants(ns + "Meta") select node1)
                     {
-                        Sizes.Add(new XAttribute("isSetByUser", "true"));
+                        string OutLine_Meta = OutLine_Metas.Attribute("name").Value ;
+                        if (OutLine_Meta != "omTaggingBank" )
+                        {
+                            XElement Positions = Outlines.Descendants(ns + "Position").FirstOrDefault();
+                            Positions.Attribute("x").Value = "36.00000000000000";
+                            Positions.Attribute("y").Value = "86.4000015258789";
+                            XElement Sizes = Outlines.Descendants(ns + "Size").FirstOrDefault();
+                            string Size_w = Sizes.Attribute("width").Value;
+                            string Size_h = Sizes.Attribute("height").Value;
+                            double Size_w_int = double.Parse(Size_w);
+                            double Size_h_int = double.Parse(Size_h);
+                            double Size_chu = Size_h_int / Size_w_int;
+                            Sizes.Attribute("width").Value = "451.2755737304687";
+                            string Size_h_after = (451.2755737304687 * Size_chu).ToString();
+                            Sizes.Attribute("height").Value = Size_h_after;
+                            try
+                            {
+                                Sizes.Add(new XAttribute("isSetByUser", "true"));
+                            }
+                            catch (Exception)
+                            {
+                                break;
+                            }
+                            finally
+                            {
+                                Sizes.Attribute("isSetByUser").Value = "true";
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
-                    catch (Exception)
-                    {
-                        break;
-                    }
-                    finally
-                    {
-                        Sizes.Attribute("isSetByUser").Value = "true";
-                    }
+                        
 
                     //int OEs_count = Outlines.Descendants(ns + "OE").Count();
                     //MessageBox.Show(OEs_count.ToString());
@@ -680,6 +694,45 @@ namespace litingaddin
 
 
         }
+
+        public void page_a4(IRibbonControl control)
+        {
+
+            OneNote.Application onenoteApp = new OneNote.Application();
+            string xml;
+            var pageid = onenoteApp.Windows.CurrentWindow.CurrentPageId;
+            onenoteApp.GetPageContent(pageid, out xml, OneNote.PageInfo.piAll);
+            var doc = XDocument.Parse(xml);
+            XNamespace ns = doc.Root.Name.Namespace;
+           
+            XElement oldPageSize = doc.Descendants(ns + "PageSize").FirstOrDefault();
+            //MessageBox.Show(TagDefs.ToString());
+            oldPageSize.RemoveNodes();
+            XElement newPageSize_Ori = new XElement(ns + "Orientation",
+                                            new XAttribute("landscape", "false")
+                                            );
+            XElement newPageSize_Dim = new XElement(ns + "Dimensions",
+                                            new XAttribute("width", "595.2755737304687"),
+                                            new XAttribute("height", "841.8897094726562")
+                                            );
+            XElement newPageSize_Mar = new XElement(ns + "Margins",
+                                            new XAttribute("top", "36.0"),
+                                            new XAttribute("bottom", "36.0"),
+                                            new XAttribute("left", "72.0"),
+                                            new XAttribute("right", "72.0")
+                                            );
+            //MessageBox.Show(newTagDefs.ToString());
+            oldPageSize.Add(newPageSize_Ori);
+            oldPageSize.Add(newPageSize_Dim);
+            oldPageSize.Add(newPageSize_Mar);
+
+
+            //MessageBox.Show(doc.ToString());
+            onenoteApp.UpdatePageContent(doc.ToString());
+           
+        }
+
+        
         class CCOMStreamWrapper : IStream
         {
             public CCOMStreamWrapper(System.IO.Stream streamWrap)
