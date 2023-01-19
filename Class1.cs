@@ -375,16 +375,15 @@ namespace litingaddin
             XNamespace ns = doc.Root.Name.Namespace;
             foreach (XElement Outlines in from node in doc.Descendants(ns + "Outline") select node)
             {
+                //MessageBox.Show(Outlines.ToString());
                 string OutLine_data = Outlines.Descendants(ns + "T").FirstOrDefault().Value.ToString();
-                
-                
                 if (String.IsNullOrEmpty(OutLine_data))
                 {
-                    break;
+                    continue;
                 }
                 else 
                 {
-
+                    //MessageBox.Show(OutLine_data);
                     XElement Page_Meta = doc.Descendants(ns + "Meta").Where(x => x.Attribute("name").Value == "TaggingKit.PageTags").FirstOrDefault();
                     String Mate_content;
                     if (Page_Meta != null)
@@ -397,7 +396,8 @@ namespace litingaddin
                     }
                     if ((OutLine_data.Replace(" ", "") == Mate_content) && Mate_content != null)
                     {
-                        break;
+                        continue;
+
                     }
                     else
                     {
@@ -406,6 +406,7 @@ namespace litingaddin
                             string OutLine_Meta = OutLine_Metas.Attribute("name").Value;
                             if (OutLine_Meta != "omTaggingBank")
                             {
+                                
                                 XElement Positions = Outlines.Descendants(ns + "Position").FirstOrDefault();
                                 Positions.Attribute("x").Value = "36.00000000000000";
                                 Positions.Attribute("y").Value = "86.4000015258789";
@@ -414,23 +415,35 @@ namespace litingaddin
                                 string Size_h = Sizes.Attribute("height").Value;
                                 double Size_w_int = double.Parse(Size_w);
                                 double Size_h_int = double.Parse(Size_h);
-                                double Size_chu = Size_h_int / Size_w_int;
-                                Sizes.Attribute("width").Value = "451.2755737304687";
-                                string Size_h_after = (451.2755737304687 * Size_chu).ToString();
-                                Sizes.Attribute("height").Value = Size_h_after;
+                                //769.8897094726562
+                                double Size_old = Size_w_int * Size_h_int;
+                                if (Size_old< 347432.4203514568)
+                                {
+                                    Sizes.Attribute("width").Value = "451.2755737304687";
+                                    Sizes.Attribute("height").Value = "769.8897094726562";
+                                }
+                                else
+                                {
+                                    double Size_chu = Size_h_int / Size_w_int;
+                                    Sizes.Attribute("width").Value = "451.2755737304687";
+                                    string Size_h_after = (451.2755737304687 * Size_chu).ToString();
+                                    Sizes.Attribute("height").Value = Size_h_after;
+                                }
                                 try
                                 {
                                     Sizes.Add(new XAttribute("isSetByUser", "true"));
                                 }
                                 catch (Exception)
                                 {
-                                    break;
+                                    
                                 }
                                 finally
                                 {
                                     Sizes.Attribute("isSetByUser").Value = "true";
                                 }
+                                onenoteApp.UpdatePageContent(doc.ToString(), System.DateTime.MinValue);
                             }
+
 
                         }
                     }
