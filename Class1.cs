@@ -377,122 +377,68 @@ namespace litingaddin
             {
                 string OutLine_data = Outlines.Descendants(ns + "T").FirstOrDefault().Value.ToString();
                 
+                
                 if (String.IsNullOrEmpty(OutLine_data))
                 {
                     break;
                 }
-                else
+                else 
                 {
-                    foreach (XElement OutLine_Metas in from node1 in Outlines.Descendants(ns + "Meta") select node1)
+
+                    XElement Page_Meta = doc.Descendants(ns + "Meta").Where(x => x.Attribute("name").Value == "TaggingKit.PageTags").FirstOrDefault();
+                    String Mate_content;
+                    if (Page_Meta != null)
                     {
-                        string OutLine_Meta = OutLine_Metas.Attribute("name").Value ;
-                        if (OutLine_Meta != "omTaggingBank" )
+                        Mate_content = Page_Meta.Attribute("content").Value;
+                    }
+                    else
+                    {
+                        Mate_content = null;
+                    }
+                    if ((OutLine_data.Replace(" ", "") == Mate_content) && Mate_content != null)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        foreach (XElement OutLine_Metas in from node1 in Outlines.Descendants(ns + "Meta") select node1)
                         {
-                            XElement Positions = Outlines.Descendants(ns + "Position").FirstOrDefault();
-                            Positions.Attribute("x").Value = "36.00000000000000";
-                            Positions.Attribute("y").Value = "86.4000015258789";
-                            XElement Sizes = Outlines.Descendants(ns + "Size").FirstOrDefault();
-                            string Size_w = Sizes.Attribute("width").Value;
-                            string Size_h = Sizes.Attribute("height").Value;
-                            double Size_w_int = double.Parse(Size_w);
-                            double Size_h_int = double.Parse(Size_h);
-                            double Size_chu = Size_h_int / Size_w_int;
-                            Sizes.Attribute("width").Value = "451.2755737304687";
-                            string Size_h_after = (451.2755737304687 * Size_chu).ToString();
-                            Sizes.Attribute("height").Value = Size_h_after;
-                            try
+                            string OutLine_Meta = OutLine_Metas.Attribute("name").Value;
+                            if (OutLine_Meta != "omTaggingBank")
                             {
-                                Sizes.Add(new XAttribute("isSetByUser", "true"));
+                                XElement Positions = Outlines.Descendants(ns + "Position").FirstOrDefault();
+                                Positions.Attribute("x").Value = "36.00000000000000";
+                                Positions.Attribute("y").Value = "86.4000015258789";
+                                XElement Sizes = Outlines.Descendants(ns + "Size").FirstOrDefault();
+                                string Size_w = Sizes.Attribute("width").Value;
+                                string Size_h = Sizes.Attribute("height").Value;
+                                double Size_w_int = double.Parse(Size_w);
+                                double Size_h_int = double.Parse(Size_h);
+                                double Size_chu = Size_h_int / Size_w_int;
+                                Sizes.Attribute("width").Value = "451.2755737304687";
+                                string Size_h_after = (451.2755737304687 * Size_chu).ToString();
+                                Sizes.Attribute("height").Value = Size_h_after;
+                                try
+                                {
+                                    Sizes.Add(new XAttribute("isSetByUser", "true"));
+                                }
+                                catch (Exception)
+                                {
+                                    break;
+                                }
+                                finally
+                                {
+                                    Sizes.Attribute("isSetByUser").Value = "true";
+                                }
                             }
-                            catch (Exception)
-                            {
-                                break;
-                            }
-                            finally
-                            {
-                                Sizes.Attribute("isSetByUser").Value = "true";
-                            }
-                        }
-                        else
-                        {
-                            break;
+
                         }
                     }
-                        
-
-                    //int OEs_count = Outlines.Descendants(ns + "OE").Count();
-                    //MessageBox.Show(OEs_count.ToString());
-                    //if (OEs_count > 1)
-                    //{
-                    //    foreach (XElement OEs in from node in Outlines.Descendants(ns + "OE") select node)
-                    //    {
-                    //        string OEs_Styles = OEs.Attribute("style").Value;
-                    //        if (String.IsNullOrEmpty(OEs_Styles))
-                    //        {
-                    //            OEs.Add(new XAttribute("style", "font-family:宋体;font-size:14.0pt;color:black"));
-                    //        }
-                    //        else
-                    //        {
-                    //            OEs.Attribute("style").Value= "font-family:宋体;font-size:14.0pt;color:black";
-                    //        }
-                    //    }
-                    //    foreach (XElement Ts_1 in from node in Outlines.Descendants(ns + "T") select node)
-                    //    {
-                    //        string Ts_1_Styles = Ts_1.Attribute("style").Value;
-                    //        if (String.IsNullOrEmpty(Ts_1_Styles))
-                    //        {
-                    //            Ts_1.Add(new XAttribute("style", "font-family:宋体;font-size:14.0pt;color:black"));
-                    //        }
-                    //        else
-                    //        {
-                    //            Ts_1.Attribute("style").Value = "font-family:宋体;font-size:14.0pt;color:black";
-                    //        }
-                    //    }
-                    //    foreach (XElement Numbers in from node in Outlines.Descendants(ns + "Number") select node)
-                    //    {
-                    //        string Numbers_fontColors = Numbers.Attribute("fontColor").Value;
-                    //        if (String.IsNullOrEmpty(Numbers_fontColors))
-                    //        {
-                    //            Numbers.Add(new XAttribute("fontColor", "#000000"));
-                    //        }
-                    //        else
-                    //        {
-                    //            Numbers.Attribute("fontColor").Value= "#000000";
-                    //        }
-                    //        string Numbers_fontSizes = Numbers.Attribute("fontSize").Value;
-                    //        if (String.IsNullOrEmpty(Numbers_fontSizes))
-                    //        {
-                    //            Numbers.Add(new XAttribute("fontSize", "14.0"));
-                    //        }
-                    //        else
-                    //        {
-                    //            Numbers.Attribute("fontSize").Value= "14.0";
-                    //        }
-                    //        string Numbers_fonts = Numbers.Attribute("font").Value;
-                    //        if (String.IsNullOrEmpty(Numbers_fontSizes))
-                    //        {
-                    //            Numbers.Add(new XAttribute("font", "宋体"));
-                    //        }
-                    //        else
-                    //        {
-                    //            Numbers.Attribute("font").Value = "宋体";
-                    //        }
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    XElement OEs_1 = Outlines.Descendants(ns + "OE").FirstOrDefault();
-                    //    string Styles_1 = OEs_1.Attribute("style").Value;
-                    //    if (String.IsNullOrEmpty(Styles_1))
-                    //    {
-                    //        OEs_1.Add(new XAttribute("style", "font-family:宋体;font-size:14.0pt;color:black"));
-                    //    }
-                    //    else
-                    //    {
-                    //        OEs_1.Attribute("style").Value = "font-family:宋体;font-size:14.0pt;color:black";
-                    //    }
-                    //}
+                
+                   
+                    
                 }
+                
             }
             onenoteApp.UpdatePageContent(doc.ToString(), System.DateTime.MinValue);
         }
