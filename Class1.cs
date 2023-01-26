@@ -401,51 +401,96 @@ namespace litingaddin
                     }
                     else
                     {
-                        foreach (XElement OutLine_Metas in from node1 in Outlines.Descendants(ns + "Meta") select node1)
+                        XElement OutLine_Meta_Isnull = Outlines.Descendants(ns + "Meta").FirstOrDefault();
+                        if (OutLine_Meta_Isnull != null)
                         {
-                            string OutLine_Meta = OutLine_Metas.Attribute("name").Value;
-                            if (OutLine_Meta != "omTaggingBank")
+                            foreach (XElement OutLine_Metas in from node1 in Outlines.Descendants(ns + "Meta") select node1)
                             {
-                                
-                                XElement Positions = Outlines.Descendants(ns + "Position").FirstOrDefault();
-                                Positions.Attribute("x").Value = "36.00000000000000";
-                                Positions.Attribute("y").Value = "86.4000015258789";
-                                XElement Sizes = Outlines.Descendants(ns + "Size").FirstOrDefault();
-                                string Size_w = Sizes.Attribute("width").Value;
-                                string Size_h = Sizes.Attribute("height").Value;
-                                double Size_w_int = double.Parse(Size_w);
-                                double Size_h_int = double.Parse(Size_h);
-                                //769.8897094726562
-                                double Size_old = Size_w_int * Size_h_int;
-                                if (Size_old< 347432.4203514568)
+                                string OutLine_Meta = OutLine_Metas.Attribute("name").Value;
+                                if (OutLine_Meta != "omTaggingBank")
                                 {
-                                    Sizes.Attribute("width").Value = "451.2755737304687";
-                                    Sizes.Attribute("height").Value = "769.8897094726562";
+
+                                    XElement Positions = Outlines.Descendants(ns + "Position").FirstOrDefault();
+                                    Positions.Attribute("x").Value = "36.00000000000000";
+                                    Positions.Attribute("y").Value = "86.4000015258789";
+                                    XElement Sizes = Outlines.Descendants(ns + "Size").FirstOrDefault();
+                                    string Size_w = Sizes.Attribute("width").Value;
+                                    string Size_h = Sizes.Attribute("height").Value;
+                                    double Size_w_int = double.Parse(Size_w);
+                                    double Size_h_int = double.Parse(Size_h);
+                                    //769.8897094726562
+                                    double Size_old = Size_w_int * Size_h_int;
+                                    if (Size_old < 347432.4203514568)
+                                    {
+                                        Sizes.Attribute("width").Value = "451.2755737304687";
+                                        Sizes.Attribute("height").Value = "769.8897094726562";
+                                    }
+                                    else
+                                    {
+                                        double Size_chu = Size_h_int / Size_w_int;
+                                        Sizes.Attribute("width").Value = "451.2755737304687";
+                                        string Size_h_after = (451.2755737304687 * Size_chu).ToString();
+                                        Sizes.Attribute("height").Value = Size_h_after;
+                                    }
+                                    try
+                                    {
+                                        Sizes.Add(new XAttribute("isSetByUser", "true"));
+                                    }
+                                    catch (Exception)
+                                    {
+
+                                    }
+                                    finally
+                                    {
+                                        Sizes.Attribute("isSetByUser").Value = "true";
+                                    }
+                                    onenoteApp.UpdatePageContent(doc.ToString(), System.DateTime.MinValue);
                                 }
-                                else
-                                {
-                                    double Size_chu = Size_h_int / Size_w_int;
-                                    Sizes.Attribute("width").Value = "451.2755737304687";
-                                    string Size_h_after = (451.2755737304687 * Size_chu).ToString();
-                                    Sizes.Attribute("height").Value = Size_h_after;
-                                }
-                                try
-                                {
-                                    Sizes.Add(new XAttribute("isSetByUser", "true"));
-                                }
-                                catch (Exception)
-                                {
-                                    
-                                }
-                                finally
-                                {
-                                    Sizes.Attribute("isSetByUser").Value = "true";
-                                }
-                                onenoteApp.UpdatePageContent(doc.ToString(), System.DateTime.MinValue);
+
+
                             }
-
-
                         }
+                        else
+                        {
+                            XElement Positions = Outlines.Descendants(ns + "Position").FirstOrDefault();
+                            Positions.Attribute("x").Value = "36.00000000000000";
+                            Positions.Attribute("y").Value = "86.4000015258789";
+                            XElement Sizes = Outlines.Descendants(ns + "Size").FirstOrDefault();
+                            string Size_w = Sizes.Attribute("width").Value;
+                            string Size_h = Sizes.Attribute("height").Value;
+                            double Size_w_int = double.Parse(Size_w);
+                            double Size_h_int = double.Parse(Size_h);
+                            //769.8897094726562
+                            double Size_old = Size_w_int * Size_h_int;
+                            if (Size_old < 347432.4203514568)
+                            {
+                                Sizes.Attribute("width").Value = "451.2755737304687";
+                                Sizes.Attribute("height").Value = "769.8897094726562";
+                            }
+                            else
+                            {
+                                double Size_chu = Size_h_int / Size_w_int;
+                                Sizes.Attribute("width").Value = "451.2755737304687";
+                                string Size_h_after = (451.2755737304687 * Size_chu).ToString();
+                                Sizes.Attribute("height").Value = Size_h_after;
+                            }
+                            try
+                            {
+                                Sizes.Add(new XAttribute("isSetByUser", "true"));
+                            }
+                            catch (Exception)
+                            {
+
+                            }
+                            finally
+                            {
+                                Sizes.Attribute("isSetByUser").Value = "true";
+                            }
+                            onenoteApp.UpdatePageContent(doc.ToString(), System.DateTime.MinValue);
+                        }
+                        
+
+
                     }
                 
                    
@@ -654,6 +699,101 @@ namespace litingaddin
 
         }
 
+        public void create_my_ribao(IRibbonControl control)
+        {
+            // 获取当前日期
+            var date = DateTime.Now.ToString("yyyy-MM-dd");
+            string[] weekdays = { "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六" };
+            string wkCN = weekdays[Convert.ToInt32(DateTime.Now.DayOfWeek)];
+            var date_day = date + " " + wkCN;
+            var date_year = DateTime.Now.ToString("yyyy");
+            var date_mouth = DateTime.Now.ToString("MMMM", new CultureInfo("zh-CN"));
+
+            var application = new OneNote.Application();
+            String onenote_file;
+            application.GetSpecialLocation((OneNote.SpecialLocation)2, out onenote_file);
+            // Get info from OneNote 
+            string xml;
+            application.GetHierarchy(null, OneNote.HierarchyScope.hsSections, out xml);
+            XDocument doc = XDocument.Parse(xml);
+            XNamespace ns = doc.Root.Name.Namespace;
+
+            // Assuming you have a notebook called "Test" 
+            XElement notebook = doc.Root.Elements(ns + "Notebook").Where(x => x.Attribute("name").Value == "My Work Log").FirstOrDefault();
+            if (notebook == null)
+            {
+                String strID_1;
+                String notebook_string;
+                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
+                application.OpenHierarchy(onenote_file + "\\My Work Log\\",
+                System.String.Empty, out strID_1, OneNote.CreateFileType.cftNotebook);
+                application.GetHierarchy(strID_1, OneNote.HierarchyScope.hsNotebooks, out notebook_string);
+                notebook = XElement.Parse(notebook_string);
+            }
+
+
+
+            // If there is a section, just use the first one we encounter 
+            XElement section_year = notebook.Elements(ns + "SectionGroup").Where(x => x.Attribute("name").Value == date_year).FirstOrDefault();
+            if (section_year == null)
+            {
+                String strID_2;
+                String section_year_string;
+                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
+                application.OpenHierarchy(onenote_file + "\\My Work Log\\" + date_year + "\\",
+                System.String.Empty, out strID_2, OneNote.CreateFileType.cftFolder);
+
+                application.GetHierarchy(strID_2, OneNote.HierarchyScope.hsSections, out section_year_string);
+                section_year = XElement.Parse(section_year_string);
+            }
+
+
+            XElement section_mouth = section_year.Elements(ns + "Section").Where(x => x.Attribute("name").Value == date_mouth).FirstOrDefault();
+            if (section_mouth == null)
+            {
+                String strID_3;
+                String section_mouth_string;
+                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
+                application.OpenHierarchy(onenote_file + "\\My Work Log\\" + date_year + "\\" + date_mouth + ".one",
+                System.String.Empty, out strID_3, OneNote.CreateFileType.cftSection);
+                application.GetHierarchy(strID_3, OneNote.HierarchyScope.hsSections, out section_mouth_string);
+                section_mouth = XElement.Parse(section_mouth_string);
+
+            }
+
+
+            // Create a page 
+            XElement section_day = section_mouth.Elements(ns + "Section").Where(x => x.Attribute("name").Value == date_day).FirstOrDefault();
+            if (section_day == null)
+            {
+                string newPageID;
+                application.CreateNewPage(section_mouth.Attribute("ID").Value, out newPageID);
+
+                //MessageBox.Show(newPageID);
+                // Create the page element using the ID of the new page OneNote just created 
+                XElement newPage = new XElement(ns + "Page");
+                newPage.SetAttributeValue("ID", newPageID);
+
+
+
+                // Add a title just for grins 
+                newPage.Add(new XElement(ns + "Title",
+                    new XElement(ns + "OE",
+                     new XElement(ns + "T",
+                      new XCData(date_day)))));
+                // Add an outline and text content 
+                newPage.Add(new XElement(ns + "Outline",
+                    new XElement(ns + "OEChildren",
+                     new XElement(ns + "OE",
+                      new XElement(ns + "T",
+                       new XCData(""))))));
+                // 创建 OneNote 页
+                //MessageBox.Show(newPage.ToString());
+                application.UpdatePageContent(newPage.ToString());
+            }
+
+
+        }
         public void page_a4(IRibbonControl control)
         {
 
