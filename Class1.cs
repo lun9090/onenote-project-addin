@@ -724,7 +724,6 @@ namespace litingaddin
             {
                 String strID_1;
                 String notebook_string;
-                
                 application.OpenHierarchy(onenote_file + "\\My Work Log\\",
             System.String.Empty, out strID_1, OneNote.CreateFileType.cftNotebook);
                 application.GetHierarchy(strID_1, OneNote.HierarchyScope.hsNotebooks, out notebook_string);
