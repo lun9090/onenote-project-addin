@@ -699,6 +699,8 @@ namespace litingaddin
 
         }
 
+       
+
         public void create_my_ribao(IRibbonControl control)
         {
             // 获取当前日期
@@ -724,12 +726,11 @@ namespace litingaddin
             {
                 String strID_1;
                 String notebook_string;
+                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
                 application.OpenHierarchy(onenote_file + "\\My Work Log\\",
-            System.String.Empty, out strID_1, OneNote.CreateFileType.cftNotebook);
+                System.String.Empty, out strID_1, OneNote.CreateFileType.cftNotebook);
                 application.GetHierarchy(strID_1, OneNote.HierarchyScope.hsNotebooks, out notebook_string);
                 notebook = XElement.Parse(notebook_string);
-                
-                
             }
 
 
@@ -744,11 +745,6 @@ namespace litingaddin
                 application.OpenHierarchy(onenote_file + "\\My Work Log\\" + date_year + "\\",
                 System.String.Empty, out strID_2, OneNote.CreateFileType.cftFolder);
 
-                application.GetHierarchy(strID_2, OneNote.HierarchyScope.hsSections, out section_year_string);
-                section_year = XElement.Parse(section_year_string);
-            }
-
-
             XElement section_mouth = section_year.Elements(ns + "Section").Where(x => x.Attribute("name").Value == date_mouth).FirstOrDefault();
             if (section_mouth == null)
             {
@@ -761,11 +757,45 @@ namespace litingaddin
                 section_mouth = XElement.Parse(section_mouth_string);
 
             }
+            // Create a page 
+                XElement section_day = section_mouth.Elements(ns + "Section").Where(x => x.Attribute("name").Value == date_day).FirstOrDefault();
+            if (section_day == null)
+            {
+                string newPageID;
+                application.CreateNewPage(section_mouth.Attribute("ID").Value, out newPageID);
+
+                //MessageBox.Show(newPageID);
+                // Create the page element using the ID of the new page OneNote just created 
+                XElement newPage = new XElement(ns + "Page");
+                newPage.SetAttributeValue("ID", newPageID);
+
+
+
+                // Add a title just for grins 
+                newPage.Add(new XElement(ns + "Title",
+                    new XElement(ns + "OE",
+                     new XElement(ns + "T",
+                      new XCData(date_day)))));
+                // Add an outline and text content 
+                newPage.Add(new XElement(ns + "Outline",
+                    new XElement(ns + "OEChildren",
+                     new XElement(ns + "OE",
+                      new XElement(ns + "T",
+                       new XCData(""))))));
+                // 创建 OneNote 页
+                //MessageBox.Show(newPage.ToString());
+                application.UpdatePageContent(newPage.ToString());
+            }
+                application.GetHierarchy(strID_2, OneNote.HierarchyScope.hsSections, out section_year_string);
+                section_year = XElement.Parse(section_year_string);
+            }
 
 
         }
 
-        
+           
+
+
             
         public void page_a4(IRibbonControl control)
         {
