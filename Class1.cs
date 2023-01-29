@@ -699,9 +699,8 @@ namespace litingaddin
 
         }
 
-       
 
-        public void create_my_ribao(IRibbonControl control)
+        public void create_my_ribao_kong(IRibbonControl control)
         {
             // 获取当前日期
             var date = DateTime.Now.ToString("yyyy-MM-dd");
@@ -719,7 +718,6 @@ namespace litingaddin
             application.GetHierarchy(null, OneNote.HierarchyScope.hsSections, out xml);
             XDocument doc = XDocument.Parse(xml);
             XNamespace ns = doc.Root.Name.Namespace;
-
             // Assuming you have a notebook called "Test" 
             XElement notebook = doc.Root.Elements(ns + "Notebook").Where(x => x.Attribute("name").Value == "My Work Log").FirstOrDefault();
             if (notebook == null)
@@ -745,6 +743,11 @@ namespace litingaddin
                 application.OpenHierarchy(onenote_file + "\\My Work Log\\" + date_year + "\\",
                 System.String.Empty, out strID_2, OneNote.CreateFileType.cftFolder);
 
+                application.GetHierarchy(strID_2, OneNote.HierarchyScope.hsSections, out section_year_string);
+                section_year = XElement.Parse(section_year_string);
+            }
+
+
             XElement section_mouth = section_year.Elements(ns + "Section").Where(x => x.Attribute("name").Value == date_mouth).FirstOrDefault();
             if (section_mouth == null)
             {
@@ -757,8 +760,10 @@ namespace litingaddin
                 section_mouth = XElement.Parse(section_mouth_string);
 
             }
+
+
             // Create a page 
-                XElement section_day = section_mouth.Elements(ns + "Section").Where(x => x.Attribute("name").Value == date_day).FirstOrDefault();
+            XElement section_day = section_mouth.Elements(ns + "Section").Where(x => x.Attribute("name").Value == date_day).FirstOrDefault();
             if (section_day == null)
             {
                 string newPageID;
@@ -786,17 +791,766 @@ namespace litingaddin
                 //MessageBox.Show(newPage.ToString());
                 application.UpdatePageContent(newPage.ToString());
             }
+
+
+
+        }
+        public void create_my_ribao_quan(IRibbonControl control)
+        {
+            // 获取当前日期
+            var date = DateTime.Now.ToString("yyyy-MM-dd");
+            string[] weekdays = { "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六" };
+            string wkCN = weekdays[Convert.ToInt32(DateTime.Now.DayOfWeek)];
+            var date_day = date + " " + wkCN;
+            var date_year = DateTime.Now.ToString("yyyy");
+            var date_mouth = DateTime.Now.ToString("MMMM", new CultureInfo("zh-CN"));
+
+            var application = new OneNote.Application();
+            String onenote_file;
+            application.GetSpecialLocation((OneNote.SpecialLocation)2, out onenote_file);
+            // Get info from OneNote 
+            string xml;
+            application.GetHierarchy(null, OneNote.HierarchyScope.hsSections, out xml);
+            XDocument doc = XDocument.Parse(xml);
+            XNamespace ns = doc.Root.Name.Namespace;
+            // Assuming you have a notebook called "Test" 
+            XElement notebook = doc.Root.Elements(ns + "Notebook").Where(x => x.Attribute("name").Value == "My Work Log").FirstOrDefault();
+            if (notebook == null)
+            {
+                String strID_1;
+                String notebook_string;
+                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
+                application.OpenHierarchy(onenote_file + "\\My Work Log\\",
+                System.String.Empty, out strID_1, OneNote.CreateFileType.cftNotebook);
+                application.GetHierarchy(strID_1, OneNote.HierarchyScope.hsNotebooks, out notebook_string);
+                notebook = XElement.Parse(notebook_string);
+            }
+
+
+
+            // If there is a section, just use the first one we encounter 
+            XElement section_year = notebook.Elements(ns + "SectionGroup").Where(x => x.Attribute("name").Value == date_year).FirstOrDefault();
+            if (section_year == null)
+            {
+                String strID_2;
+                String section_year_string;
+                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
+                application.OpenHierarchy(onenote_file + "\\My Work Log\\" + date_year + "\\",
+                System.String.Empty, out strID_2, OneNote.CreateFileType.cftFolder);
+
                 application.GetHierarchy(strID_2, OneNote.HierarchyScope.hsSections, out section_year_string);
                 section_year = XElement.Parse(section_year_string);
             }
 
 
+            XElement section_mouth = section_year.Elements(ns + "Section").Where(x => x.Attribute("name").Value == date_mouth).FirstOrDefault();
+            if (section_mouth == null)
+            {
+                String strID_3;
+                String section_mouth_string;
+                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
+                application.OpenHierarchy(onenote_file + "\\My Work Log\\" + date_year + "\\" + date_mouth + ".one",
+                System.String.Empty, out strID_3, OneNote.CreateFileType.cftSection);
+                application.GetHierarchy(strID_3, OneNote.HierarchyScope.hsSections, out section_mouth_string);
+                section_mouth = XElement.Parse(section_mouth_string);
+
+            }
+
+
+            // Create a page 
+            XElement section_day = section_mouth.Elements(ns + "Section").Where(x => x.Attribute("name").Value == date_day).FirstOrDefault();
+            if (section_day == null)
+            {
+                string newPageID;
+                application.CreateNewPage(section_mouth.Attribute("ID").Value, out newPageID);
+
+                //MessageBox.Show(newPageID);
+                // Create the page element using the ID of the new page OneNote just created 
+                XElement newPage = new XElement(ns + "Page");
+                newPage.SetAttributeValue("ID", newPageID);
+
+                // Add a title just for grins 
+                newPage.Add(new XElement(ns + "Title",
+                        new XElement(ns + "OE",
+                         new XElement(ns + "T",
+                          new XCData(date_day)))));
+                // Add an outline and text content 
+                /*newPage.Add(new XElement(ns + "Outline",
+                    new XElement(ns + "OEChildren",
+                     new XElement(ns + "OE",
+                      new XElement(ns + "T",
+                       new XCData(""))))));*/
+                newPage.Add(new XElement(ns + "Outline",
+                       new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                        new XElement(ns + "Table",
+                        new XAttribute("bordersVisible", "true"),
+                        new XAttribute("hasHeaderRow", "true")
+                        ,
+                        new XElement(ns + "Columns",
+                        new XElement(ns + "Column",
+                        new XAttribute("index", "0"),
+                        new XAttribute("width", "37.11000061035156")
+
+                        ),
+                         new XElement(ns + "Column",
+                        new XAttribute("index", "1"),
+                        new XAttribute("width", "402.9299926757812"),
+                        new XAttribute("isLocked", "true")
+
+                        )
+                         ),
+                        new XElement(ns + "Row",
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                         new XElement(ns + "T",
+                          new XCData("日报")
+                          )
+                         )
+                        )
+                        ),
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                        new XElement(ns + "Table",
+                        new XAttribute("bordersVisible", "true"),
+                        new XAttribute("hasHeaderRow", "true")
+                        ,
+                        new XElement(ns + "Columns",
+                        new XElement(ns + "Column",
+                        new XAttribute("index", "0"),
+                        new XAttribute("width", "48.20996856689453")
+
+                        ),
+                         new XElement(ns + "Column",
+                        new XAttribute("index", "1"),
+                        new XAttribute("width", "340.1100463867187"),
+                        new XAttribute("isLocked", "true")
+
+                        )
+                         ),
+                        new XElement(ns + "Row",
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                         new XElement(ns + "T",
+                          new XCData("工作计划")
+                         )
+                        )
+                        )
+                        ),
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                         new XElement(ns + "T",
+                          new XCData("")
+                         )
+                        )
+                        )
+                        )
+                        ),
+                        new XElement(ns + "Row",
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                         new XElement(ns + "T",
+                          new XCData("工作结果")
+                         )
+                        )
+                        )
+                        ),
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                         new XElement(ns + "T",
+                          new XCData("")
+                         )
+                        )
+                        )
+                        )
+                        ),
+                        new XElement(ns + "Row",
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                         new XElement(ns + "T",
+                          new XCData("佐证资料")
+                         )
+                        )
+                        )
+                        ),
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                         new XElement(ns + "T",
+                          new XCData("")
+                         )
+                        )
+                        )
+                        )
+                        )
+                        )
+                        )
+                        )
+
+                        )
+                        )
+                         )
+                        )
+                        )
+                       )
+                    );
+                // 创建 OneNote 页
+                //MessageBox.Show(newPage.ToString());
+                application.UpdatePageContent(newPage.ToString());
+            }
+
         }
 
+
+        public void create_my_ribao_dan(IRibbonControl control)
+        {
+            // 获取当前日期
+            var date = DateTime.Now.ToString("yyyy-MM-dd");
+            string[] weekdays = { "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六" };
+            string wkCN = weekdays[Convert.ToInt32(DateTime.Now.DayOfWeek)];
+            var date_day = date + " " + wkCN;
+            var date_year = DateTime.Now.ToString("yyyy");
+            var date_mouth = DateTime.Now.ToString("MMMM", new CultureInfo("zh-CN"));
+
+            var application = new OneNote.Application();
+            String onenote_file;
+            application.GetSpecialLocation((OneNote.SpecialLocation)2, out onenote_file);
+            // Get info from OneNote 
+            string xml;
+            application.GetHierarchy(null, OneNote.HierarchyScope.hsSections, out xml);
+            XDocument doc = XDocument.Parse(xml);
+            XNamespace ns = doc.Root.Name.Namespace;
+            // Assuming you have a notebook called "Test" 
+            XElement notebook = doc.Root.Elements(ns + "Notebook").Where(x => x.Attribute("name").Value == "My Work Log").FirstOrDefault();
+            if (notebook == null)
+            {
+                String strID_1;
+                String notebook_string;
+                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
+                application.OpenHierarchy(onenote_file + "\\My Work Log\\",
+                System.String.Empty, out strID_1, OneNote.CreateFileType.cftNotebook);
+                application.GetHierarchy(strID_1, OneNote.HierarchyScope.hsNotebooks, out notebook_string);
+                notebook = XElement.Parse(notebook_string);
+            }
+
+
+
+            // If there is a section, just use the first one we encounter 
+            XElement section_year = notebook.Elements(ns + "SectionGroup").Where(x => x.Attribute("name").Value == date_year).FirstOrDefault();
+            if (section_year == null)
+            {
+                String strID_2;
+                String section_year_string;
+                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
+                application.OpenHierarchy(onenote_file + "\\My Work Log\\" + date_year + "\\",
+                System.String.Empty, out strID_2, OneNote.CreateFileType.cftFolder);
+
+                application.GetHierarchy(strID_2, OneNote.HierarchyScope.hsSections, out section_year_string);
+                section_year = XElement.Parse(section_year_string);
+            }
+
+
+            XElement section_mouth = section_year.Elements(ns + "Section").Where(x => x.Attribute("name").Value == date_mouth).FirstOrDefault();
+            if (section_mouth == null)
+            {
+                String strID_3;
+                String section_mouth_string;
+                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
+                application.OpenHierarchy(onenote_file + "\\My Work Log\\" + date_year + "\\" + date_mouth + ".one",
+                System.String.Empty, out strID_3, OneNote.CreateFileType.cftSection);
+                application.GetHierarchy(strID_3, OneNote.HierarchyScope.hsSections, out section_mouth_string);
+                section_mouth = XElement.Parse(section_mouth_string);
+
+            }
+
+
+            // Create a page 
+            XElement section_day = section_mouth.Elements(ns + "Section").Where(x => x.Attribute("name").Value == date_day).FirstOrDefault();
+            if (section_day == null)
+            {
+                string newPageID;
+                application.CreateNewPage(section_mouth.Attribute("ID").Value, out newPageID);
+
+                //MessageBox.Show(newPageID);
+                // Create the page element using the ID of the new page OneNote just created 
+                XElement newPage = new XElement(ns + "Page");
+                newPage.SetAttributeValue("ID", newPageID);
+
+                // Add a title just for grins 
+                newPage.Add(new XElement(ns + "Title",
+                        new XElement(ns + "OE",
+                         new XElement(ns + "T",
+                          new XCData(date_day)))));
+                // Add an outline and text content 
+                /*newPage.Add(new XElement(ns + "Outline",
+                    new XElement(ns + "OEChildren",
+                     new XElement(ns + "OE",
+                      new XElement(ns + "T",
+                       new XCData(""))))));*/
+                newPage.Add(new XElement(ns + "Outline",
+                       new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                        new XElement(ns + "Table",
+                        new XAttribute("bordersVisible", "true"),
+                        new XAttribute("hasHeaderRow", "true")
+                        ,
+                        new XElement(ns + "Columns",
+                        new XElement(ns + "Column",
+                        new XAttribute("index", "0"),
+                        new XAttribute("width", "37.11000061035156")
+
+                        ),
+                         new XElement(ns + "Column",
+                        new XAttribute("index", "1"),
+                        new XAttribute("width", "402.9299926757812"),
+                        new XAttribute("isLocked", "true")
+
+                        )
+                         ),
+
+                        new XElement(ns + "Row",
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                         new XElement(ns + "T",
+                          new XCData("日报")
+                          )
+                         )
+                        )
+                        ),
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                        new XElement(ns + "Table",
+                        new XAttribute("bordersVisible", "true"),
+                        new XAttribute("hasHeaderRow", "true")
+                        ,
+                       new XElement(ns + "Columns",
+                        new XElement(ns + "Column",
+                        new XAttribute("index", "0"),
+                        new XAttribute("width", "48.20996856689453")
+
+                        ),
+                         new XElement(ns + "Column",
+                        new XAttribute("index", "1"),
+                        new XAttribute("width", "340.1100463867187"),
+                        new XAttribute("isLocked", "true")
+
+                        )
+                         ),
+
+                        new XElement(ns + "Row",
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                         new XElement(ns + "T",
+                          new XCData("工作结果")
+                         )
+                        )
+                        )
+                        ),
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                         new XElement(ns + "T",
+                          new XCData("")
+                         )
+                        )
+                        )
+                        )
+                        )
+                       
+                        
+                        
+                        
+                        )
+                        )
+                        )
+                        )
+
+                        )
+                        )
+                         )
+                        )
+                        )
+                       
+                    
+                    );
+                // 创建 OneNote 页
+                //MessageBox.Show(newPage.ToString());
+                application.UpdatePageContent(newPage.ToString());
+            }
+
+        }
+
+
+        public static void create_ribao(IRibbonControl control, string Page_Notebook, string Page_SectionGroup, string Page_Section, string Page_Tittle,string Page_type=null)
+        {
+            
+
+            var application = new OneNote.Application();
+            String onenote_file;
+            application.GetSpecialLocation((OneNote.SpecialLocation)2, out onenote_file);
+            // Get info from OneNote 
+            string xml;
+            application.GetHierarchy(null, OneNote.HierarchyScope.hsSections, out xml);
+            XDocument doc = XDocument.Parse(xml);
+            XNamespace ns = doc.Root.Name.Namespace;
+            // Assuming you have a notebook called "Test" 
+            XElement notebook = doc.Root.Elements(ns + "Notebook").Where(x => x.Attribute("name").Value == Page_Notebook).FirstOrDefault();
+            if (notebook == null)
+            {
+                String strID_1;
+                String notebook_string;
+                application.OpenHierarchy(onenote_file + "\\"+ Page_Notebook + "\\",
+                System.String.Empty, out strID_1, OneNote.CreateFileType.cftNotebook);
+                application.GetHierarchy(strID_1, OneNote.HierarchyScope.hsNotebooks, out notebook_string);
+                notebook = XElement.Parse(notebook_string);
+            }
+
+
+
+            // If there is a section, just use the first one we encounter 
+            XElement section_year = notebook.Elements(ns + "SectionGroup").Where(x => x.Attribute("name").Value == Page_SectionGroup).FirstOrDefault();
+            if (section_year == null)
+            {
+                String strID_2;
+                String section_year_string;
+                application.OpenHierarchy(onenote_file + "\\" + Page_Notebook + "\\" + Page_SectionGroup + "\\",
+                System.String.Empty, out strID_2, OneNote.CreateFileType.cftFolder);
+
+                application.GetHierarchy(strID_2, OneNote.HierarchyScope.hsSections, out section_year_string);
+                section_year = XElement.Parse(section_year_string);
+            }
+
+
+            XElement section_mouth = section_year.Elements(ns + "Section").Where(x => x.Attribute("name").Value == Page_Section).FirstOrDefault();
+            if (section_mouth == null)
+            {
+                String strID_3;
+                String section_mouth_string;
+                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
+                application.OpenHierarchy(onenote_file + "\\" + Page_Notebook + "\\" + Page_SectionGroup + "\\" + Page_Section + ".one",
+                System.String.Empty, out strID_3, OneNote.CreateFileType.cftSection);
+                application.GetHierarchy(strID_3, OneNote.HierarchyScope.hsSections, out section_mouth_string);
+                section_mouth = XElement.Parse(section_mouth_string);
+
+            }
+
+
+            // Create a page 
+            XElement section_day = section_mouth.Elements(ns + "Section").Where(x => x.Attribute("name").Value == Page_Tittle).FirstOrDefault();
+            if (section_day == null)
+            {
+                string newPageID;
+                application.CreateNewPage(section_mouth.Attribute("ID").Value, out newPageID);
+
+                //MessageBox.Show(newPageID);
+                // Create the page element using the ID of the new page OneNote just created 
+                XElement newPage = new XElement(ns + "Page");
+                newPage.SetAttributeValue("ID", newPageID);
+
+                // Add a title just for grins 
+                newPage.Add(new XElement(ns + "Title",
+                        new XElement(ns + "OE",
+                         new XElement(ns + "T",
+                          new XCData(Page_Tittle)))));
+                // Add an outline and text content 
+                /*newPage.Add(new XElement(ns + "Outline",
+                    new XElement(ns + "OEChildren",
+                     new XElement(ns + "OE",
+                      new XElement(ns + "T",
+                       new XCData(""))))));*/
+                if (Page_type==null || Page_type== "riji")
+                {
+                    newPage.Add(new XElement(ns + "Outline",
+                    new XElement(ns + "OEChildren",
+                     new XElement(ns + "OE",
+                      new XElement(ns + "T",
+                       new XCData(""))))));
+                }
+                else if (Page_type == "ribao_quan")
+                {
+                    newPage.Add(new XElement(ns + "Outline",
+                       new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                        new XElement(ns + "Table",
+                        new XAttribute("bordersVisible", "true"),
+                        new XAttribute("hasHeaderRow", "true")
+                        ,
+                        new XElement(ns + "Columns",
+                        new XElement(ns + "Column",
+                        new XAttribute("index", "0"),
+                        new XAttribute("width", "37.11000061035156")
+
+                        ),
+                         new XElement(ns + "Column",
+                        new XAttribute("index", "1"),
+                        new XAttribute("width", "402.9299926757812"),
+                        new XAttribute("isLocked", "true")
+
+                        )
+                         ),
+                        new XElement(ns + "Row",
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                         new XElement(ns + "T",
+                          new XCData("日报")
+                          )
+                         )
+                        )
+                        ),
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                        new XElement(ns + "Table",
+                        new XAttribute("bordersVisible", "true"),
+                        new XAttribute("hasHeaderRow", "true")
+                        ,
+                        new XElement(ns + "Columns",
+                        new XElement(ns + "Column",
+                        new XAttribute("index", "0"),
+                        new XAttribute("width", "48.20996856689453")
+
+                        ),
+                         new XElement(ns + "Column",
+                        new XAttribute("index", "1"),
+                        new XAttribute("width", "340.1100463867187"),
+                        new XAttribute("isLocked", "true")
+
+                        )
+                         ),
+                        new XElement(ns + "Row",
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                         new XElement(ns + "T",
+                          new XCData("工作计划")
+                         )
+                        )
+                        )
+                        ),
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                         new XElement(ns + "T",
+                          new XCData("")
+                         )
+                        )
+                        )
+                        )
+                        ),
+                        new XElement(ns + "Row",
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                         new XElement(ns + "T",
+                          new XCData("工作结果")
+                         )
+                        )
+                        )
+                        ),
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                         new XElement(ns + "T",
+                          new XCData("")
+                         )
+                        )
+                        )
+                        )
+                        ),
+                        new XElement(ns + "Row",
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                         new XElement(ns + "T",
+                          new XCData("佐证资料")
+                         )
+                        )
+                        )
+                        ),
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                         new XElement(ns + "T",
+                          new XCData("")
+                         )
+                        )
+                        )
+                        )
+                        )
+                        )
+                        )
+                        )
+
+                        )
+                        )
+                         )
+                        )
+                        )
+                       )
+                    );
+                }
+                else if (Page_type == "ribao_dan")
+                {
+                    newPage.Add(new XElement(ns + "Outline",
+                       new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                        new XElement(ns + "Table",
+                        new XAttribute("bordersVisible", "true"),
+                        new XAttribute("hasHeaderRow", "true")
+                        ,
+                        new XElement(ns + "Columns",
+                        new XElement(ns + "Column",
+                        new XAttribute("index", "0"),
+                        new XAttribute("width", "37.11000061035156")
+
+                        ),
+                         new XElement(ns + "Column",
+                        new XAttribute("index", "1"),
+                        new XAttribute("width", "402.9299926757812"),
+                        new XAttribute("isLocked", "true")
+
+                        )
+                         ),
+
+                        new XElement(ns + "Row",
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                         new XElement(ns + "T",
+                          new XCData("日报")
+                          )
+                         )
+                        )
+                        ),
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                        new XElement(ns + "Table",
+                        new XAttribute("bordersVisible", "true"),
+                        new XAttribute("hasHeaderRow", "true")
+                        ,
+                       new XElement(ns + "Columns",
+                        new XElement(ns + "Column",
+                        new XAttribute("index", "0"),
+                        new XAttribute("width", "48.20996856689453")
+
+                        ),
+                         new XElement(ns + "Column",
+                        new XAttribute("index", "1"),
+                        new XAttribute("width", "340.1100463867187"),
+                        new XAttribute("isLocked", "true")
+
+                        )
+                         ),
+
+                        new XElement(ns + "Row",
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                         new XElement(ns + "T",
+                          new XCData("工作结果")
+                         )
+                        )
+                        )
+                        ),
+                        new XElement(ns + "Cell",
+                        new XElement(ns + "OEChildren",
+                        new XElement(ns + "OE",
+                         new XElement(ns + "T",
+                          new XCData("")
+                         )
+                        )
+                        )
+                        )
+                        )
+
+
+
+
+                        )
+                        )
+                        )
+                        )
+
+                        )
+                        )
+                         )
+                        )
+                        )
+
+
+                    );
+                }
+                else
+                {
+                    newPage.Add(new XElement(ns + "Outline",
+                    new XElement(ns + "OEChildren",
+                     new XElement(ns + "OE",
+                      new XElement(ns + "T",
+                       new XCData(""))))));
+                }
+                
+                // 创建 OneNote 页
+                //MessageBox.Show(newPage.ToString());
+                application.UpdatePageContent(newPage.ToString());
+            }
+
+        }
+
+        public void create_my_ribao_quan_all(IRibbonControl control)
+        {
            
+            Application.EnableVisualStyles();
+            //Application.SetCompatibleTextRenderingDefault(false);
+            DateForm box1 = new DateForm();
+            Application.Run(box1);
+            box1.button1.PerformClick();
+            DateTime start_date = box1.Start_Date.Value;
+            DateTime stop_date = box1.Last_Date.Value;
+            List<DateTime> listDay = new List<DateTime>();
+            DateTime dtDay = new DateTime();
+            //循环比较，取出日期；
+            for (dtDay = start_date; dtDay.CompareTo(stop_date) <= 0; dtDay = dtDay.AddDays(1))
+            {
+                listDay.Add(dtDay);
+            }
+            foreach (DateTime today in listDay)
+            {
+                var date = today.ToString("yyyy-MM-dd");
+                string[] weekdays = { "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六" };
+                string wkCN = weekdays[Convert.ToInt32(today.DayOfWeek)];
+                var date_day = date + " " + wkCN;
+                var date_year = today.ToString("yyyy");
+                var date_mouth = today.ToString("MMMM", new CultureInfo("zh-CN"));
+                create_ribao(control, "My Work Log", date_year, date_mouth, date_day, "ribao_quan");
+            }
+
 
 
             
+        }
+        public void create_my_ribao_quan_leater(IRibbonControl control)
+        {
+            // 获取当前日期
+            var date = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
+            string[] weekdays = { "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六" };
+            string wkCN = weekdays[Convert.ToInt32(DateTime.Now.AddDays(1).DayOfWeek)];
+            var date_day = date + " " + wkCN;
+            var date_year = DateTime.Now.AddDays(1).ToString("yyyy");
+            var date_mouth = DateTime.Now.AddDays(1).ToString("MMMM", new CultureInfo("zh-CN"));           
+            create_ribao(control, "My Work Log", date_year, date_mouth, date_day, "ribao_quan");
+        }
         public void page_a4(IRibbonControl control)
         {
 
@@ -833,8 +1587,51 @@ namespace litingaddin
             onenoteApp.UpdatePageContent(doc.ToString());
            
         }
-
         
+        public class notebooks_list
+        {
+            public string notebooks_list_data;
+        }
+        public static void pruject_name(IRibbonControl control,out List<notebooks_list> list)
+        {
+
+            OneNote.Application onenoteApp = new OneNote.Application();
+            string notebook_xml;
+            onenoteApp.GetHierarchy("", OneNote.HierarchyScope.hsNotebooks, out notebook_xml);
+            
+            XDocument doc = XDocument.Parse(notebook_xml);
+            XNamespace ns = doc.Root.Name.Namespace;
+            // Assuming you have a notebook called "Test" 
+            var notebooks_list = new List<notebooks_list>();
+            foreach (XElement notebook in from node1 in doc.Root.Elements(ns + "Notebook") select node1)
+            {
+                string notebooks_list_datas = notebook.Attribute("name").Value;
+                
+                notebooks_list.Add(new notebooks_list() { notebooks_list_data = notebooks_list_datas });
+            }
+            
+            list = notebooks_list;
+            
+        }
+
+        public  int GetItemCount(IRibbonControl control)
+        {
+            List<notebooks_list> ItemLabels;
+            pruject_name(control, out ItemLabels);
+            return ItemLabels.Count;
+
+        }
+        public string GetItemLabel(IRibbonControl control, int index)
+        {
+            List<notebooks_list> ItemLabels ;
+            pruject_name(control, out ItemLabels);
+            return ItemLabels[index].notebooks_list_data.ToString();
+            
+        }
+        public string GetItemID(IRibbonControl control, int index)
+        {
+            return "heading" + index.ToString();
+        }
         class CCOMStreamWrapper : IStream
         {
             public CCOMStreamWrapper(System.IO.Stream streamWrap)
