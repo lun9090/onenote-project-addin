@@ -242,7 +242,7 @@ namespace litingaddin
         }
         public void Playlist_add_kaizhanzhong(IRibbonControl control)
         {
-            Set_tags(control, "0", "【开展中】");
+            Set_tags(control, "10", "【开展中】");
         }
         public void Playlist_del_kaizhanzhong(IRibbonControl control)
         {
@@ -250,7 +250,7 @@ namespace litingaddin
         }
         public void playlist_add_add(IRibbonControl control)
         {
-            Set_tags(control, "1", "【未开展】");
+            Set_tags(control, "11", "【未开展】");
         }
         public void playlist_del_add(IRibbonControl control)
         {
@@ -258,7 +258,7 @@ namespace litingaddin
         }
         public void Playlist_add_weiqueren(IRibbonControl control)
         {
-            Set_tags(control, "2", "【未确认】");
+            Set_tags(control, "12", "【未确认】");
         }
         public void Playlist_del_weiqueren(IRibbonControl control)
         {
@@ -266,7 +266,7 @@ namespace litingaddin
         }
         public void Playlist_add_zuofei(IRibbonControl control)
         {
-            Set_tags(control, "3", "【作废】");
+            Set_tags(control, "13", "【作废】");
         }
         public void Playlist_del_zuofei(IRibbonControl control)
         {
@@ -274,7 +274,7 @@ namespace litingaddin
         }
         public void Playlist_add_daisheji(IRibbonControl control)
         {
-            Set_tags(control, "4", "【待设计】");
+            Set_tags(control, "14", "【待设计】");
         }
         public void Playlist_del_daisheji(IRibbonControl control)
         {
@@ -282,7 +282,7 @@ namespace litingaddin
         }
         public void Playlist_add_weizhuan(IRibbonControl control)
         {
-            Set_tags(control, "5", "【未转】");
+            Set_tags(control, "15", "【未转】");
         }
         public void Playlist_del_weizhuan(IRibbonControl control)
         {
@@ -290,7 +290,7 @@ namespace litingaddin
         }
         public void Playlist_add_hebing(IRibbonControl control)
         {
-            Set_tags(control, "6", "【合并】");
+            Set_tags(control, "16", "【合并】");
         }
         public void Playlist_del_hebing(IRibbonControl control)
         {
@@ -298,7 +298,7 @@ namespace litingaddin
         }
         public void Playlist_add_yizhuan(IRibbonControl control)
         {
-            Set_tags(control, "7", "【已转】");
+            Set_tags(control, "17", "【已转】");
         }
         public void Playlist_del_yizhuan(IRibbonControl control)
         {
@@ -306,7 +306,7 @@ namespace litingaddin
         }
         public void Playlist_add_zanbukaizhan(IRibbonControl control)
         {
-            Set_tags(control, "8", "【暂不开展】");
+            Set_tags(control, "18", "【暂不开展】");
         }
         public void Playlist_del_zanbukaizhan(IRibbonControl control)
         {
@@ -315,7 +315,7 @@ namespace litingaddin
 
         public void Playlist_add_yizhuanxubuchong(IRibbonControl control)
         {
-            Set_tags(control, "9", "【已转需补充】");
+            Set_tags(control, "19", "【已转需补充】");
         }
         public void Playlist_del_yizhuanxubuchong(IRibbonControl control)
         {
@@ -323,12 +323,31 @@ namespace litingaddin
         }
         public void Playlist_add_yiwancheng(IRibbonControl control)
         {
-            Set_tags(control, "10", "【已完成】");
+            Set_tags(control, "20", "【已完成】");
         }
         public void Playlist_del_yiwancheng(IRibbonControl control)
         {
             Del_tags(control, "【已完成】");
         }
+        public void Playlist_add_p_work_n(IRibbonControl control)
+        {
+            Set_tags(control, "21", "项目工作（内部）");
+        }
+        public void Playlist_del_p_work_n(IRibbonControl control)
+        {
+            Del_tags(control, "项目工作（内部）");
+        }
+
+        public void Playlist_add_p_work_w(IRibbonControl control)
+        {
+            Set_tags(control, "22", "项目工作（外部）");
+        }
+        public void Playlist_del_p_work_w(IRibbonControl control)
+        {
+            Del_tags(control, "项目工作（外部）");
+        }
+        
+
         public class OutLines_del
         {
             public string OutLines_del_data;

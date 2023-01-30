@@ -17,6 +17,8 @@
 						<button id="Playlist_add_zanbukaizhan" label="【暂不开展】" onAction="Playlist_add_zanbukaizhan" />
 						<button id="Playlist_add_yizhuanxubuchong" label="【已转需补充】" onAction="Playlist_add_yizhuanxubuchong" />
 						<button id="Playlist_add_yiwancheng" label="【已完成】" onAction="Playlist_add_yiwancheng" />
+						<button id="Playlist_add_p_work_n" label="项目工作（内部）" onAction="Playlist_add_p_work_n" />
+						<button id="Playlist_add_p_work_w" label="项目工作（外部）" onAction="Playlist_add_p_work_w" />
 					</menu>
 					<menu id="rxboxCustom_del" label="删除标记">
 						<button id="playlist_del_add" label="【未开展】" onAction="playlist_del_add" />
@@ -30,6 +32,8 @@
 						<button id="Playlist_del_zanbukaizhan" label="【暂不开展】" onAction="Playlist_del_zanbukaizhan" />
 						<button id="Playlist_del_yizhuanxubuchong" label="【已转需补充】" onAction="Playlist_del_yizhuanxubuchong" />
 						<button id="Playlist_del_yiwancheng" label="【已完成】" onAction="Playlist_del_yiwancheng" />
+						<button id="Playlist_del_p_work_n" label="项目工作（内部）" onAction="Playlist_del_p_work_n" />
+						<button id="Playlist_del_p_work_w" label="项目工作（外部）" onAction="Playlist_del_p_work_w" />
 					</menu>
 					<button id="Del_all_tags" label="删除所有标记" onAction="Del_all_tags" />
 				</group>
