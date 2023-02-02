@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui" loadImage="GetImage" >
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" loadImage="GetImage" >
 	<ribbon>
 		<tabs>
 			<tab id="bianji1" label="项目管理">
@@ -57,9 +57,15 @@
 					<button id="create_my_ribao_quan_all" label="生成批量日报（全）" size="normal" onAction="create_my_ribao_quan_all" image="playlist_add.png" />
 				</group>
 				<group id="project" label="项目内容管理">
-					<dropDown id="project_name" label="项目名称（笔记本）" getItemCount="GetItemCount"  getItemID="GetItemID" getItemLabel="GetItemLabel"/>
+					<dropDown id="project_name" label="项目名称（笔记本）" getItemCount="GetItemCount"  getItemID="GetItemID" getItemLabel="GetItemLabel" onAction="GetonAction"/>
 				</group>
 			</tab>
 		</tabs>
 	</ribbon>
+	<contextMenus>
+		<contextMenu idMso="ContextMenuText">
+			<button id="copy_chun" label="复制为纯文本" onAction="copy_chun" insertBeforeMso="Cut"/>
+			<menuSeparator id="project_1" insertBeforeMso="Cut"/>
+		</contextMenu>
+	</contextMenus>
 </customUI>

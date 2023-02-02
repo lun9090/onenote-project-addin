@@ -19,7 +19,7 @@ namespace litingaddin.Properties {
     // 类通过类似于 ResGen 或 Visual Studio 的工具自动生成的。
     // 若要添加或移除成员，请编辑 .ResX 文件，然后重新运行 ResGen
     // (以 /str 作为命令选项)，或重新生成 VS 项目。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -92,14 +92,15 @@ namespace litingaddin.Properties {
         
         /// <summary>
         ///   查找类似 &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
-        ///&lt;customUI xmlns=&quot;http://schemas.microsoft.com/office/2006/01/customui&quot; loadImage=&quot;GetImage&quot;&gt;
+        ///&lt;customUI xmlns=&quot;http://schemas.microsoft.com/office/2006/01/customui&quot; loadImage=&quot;GetImage&quot; &gt;
         ///	&lt;ribbon&gt;
         ///		&lt;tabs&gt;
         ///			&lt;tab id=&quot;bianji1&quot; label=&quot;项目管理&quot;&gt;
-        ///				&lt;group id=&quot;groupbianji&quot; label=&quot;状态管理&quot;&gt;
-        ///					&lt;button id=&quot;update_tittle&quot; label=&quot;更新标题状态&quot; size=&quot;large&quot; onAction=&quot;update_tittle&quot; image=&quot;update_title.png&quot; /&gt;
-        ///					&lt;button id=&quot;playlist_add&quot; label=&quot;未开展&quot; size=&quot;normal&quot; onAction=&quot;playlist_add&quot; image=&quot;playlist_add.png&quot; /&gt;
-        ///					&lt;button id=&quot;allin_xml&quot; label=&quot;查看xml&quot; size=&quot;norma [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        ///				&lt;group id=&quot;groupbianji&quot; label=&quot;标记管理&quot;&gt;
+        ///					&lt;button id=&quot;update_tittle&quot; label=&quot;更新标题标记&quot; size=&quot;large&quot; onAction=&quot;update_tittle&quot; image=&quot;update_title.png&quot; /&gt;
+        ///					&lt;menu id=&quot;rxboxCustom_add&quot; label=&quot;新增标记&quot;&gt;	
+        ///						&lt;button id=&quot;playlist_add_add&quot; label=&quot;【未开展】&quot; onAction=&quot;playlist_add_add&quot; /&gt;
+        ///						&lt;button id=&quot;Playlist_add_k [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         internal static string ribbon {
             get {

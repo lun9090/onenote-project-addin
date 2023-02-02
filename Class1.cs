@@ -14,7 +14,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
 using OneNote = Microsoft.Office.Interop.OneNote;
-
+using System.Text;
 
 namespace litingaddin
 {
@@ -571,10 +571,8 @@ namespace litingaddin
             {
                 String strID_2;
                 String section_year_string;
-                //MessageBox.Show(onenote_file + "\\My Journal\\" + date_year + "\\" + date_mouth + ".one");
-                application.OpenHierarchy(onenote_file + "\\My Journal\\" + date_year + "\\",
-                System.String.Empty, out strID_2, OneNote.CreateFileType.cftFolder);
-
+                string strID_1 = notebook.Attribute("ID").Value;
+                application.OpenHierarchy(date_year, strID_1, out strID_2, OneNote.CreateFileType.cftFolder);
                 application.GetHierarchy(strID_2, OneNote.HierarchyScope.hsSections, out section_year_string);
                 section_year = XElement.Parse(section_year_string);
             }
@@ -585,9 +583,8 @@ namespace litingaddin
             {
                 String strID_3;
                 String section_mouth_string;
-                //MessageBox.Show(onenote_file + "\\My Journal\\" + date_year + "\\" + date_mouth + ".one");
-                application.OpenHierarchy(onenote_file + "\\My Journal\\" + date_year + "\\" + date_mouth + ".one",
-                System.String.Empty, out strID_3, OneNote.CreateFileType.cftSection);
+                string strID_2 = section_year.Attribute("ID").Value;
+                application.OpenHierarchy(date_mouth + ".one", strID_2, out strID_3, OneNote.CreateFileType.cftSection);
                 application.GetHierarchy(strID_3, OneNote.HierarchyScope.hsSections, out section_mouth_string);
                 section_mouth = XElement.Parse(section_mouth_string);
 
@@ -631,13 +628,12 @@ namespace litingaddin
             var date = DateTime.Now.ToString("yyyy-MM-dd");
             var date_year = DateTime.Now.ToString("yyyy");
             var date_mouth = DateTime.Now.ToString("MMMM", new CultureInfo("zh-CN"));
-
             var application = new OneNote.Application();
             String onenote_file;
             application.GetSpecialLocation((OneNote.SpecialLocation)2, out onenote_file);
             // Get info from OneNote 
             string xml;
-            application.GetHierarchy(null, OneNote.HierarchyScope.hsSections, out xml);
+            application.GetHierarchy(null, OneNote.HierarchyScope.hsPages, out xml);
             XDocument doc = XDocument.Parse(xml);
             XNamespace ns = doc.Root.Name.Namespace;
 
@@ -650,10 +646,17 @@ namespace litingaddin
                 //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
                 application.OpenHierarchy(onenote_file + "\\My Project Journal\\",
                 System.String.Empty, out strID_1, OneNote.CreateFileType.cftNotebook);
-                application.GetHierarchy(strID_1, OneNote.HierarchyScope.hsNotebooks, out notebook_string);
+                application.GetHierarchy(strID_1, OneNote.HierarchyScope.hsSections, out notebook_string);
                 notebook = XElement.Parse(notebook_string);
+                /*string section_mouth_xml_path = section_mouth_xml.Attribute("path").Value;
+                    string section_mouth_path = section_mouth_xml_path.Substring(0, section_mouth_xml_path.LastIndexOf("/"));
+                    section_year.Add(new XElement(ns + "Section",
+                            new XAttribute("name", date_mouth),
+                            new XAttribute("path", section_mouth_path + date_mouth + ".one"),
+                            new XAttribute("isCurrentlyViewed", "true")
+                            ));                    
+                    application.UpdateHierarchy(notebook.ToString());*/
             }
-
 
 
             // If there is a section, just use the first one we encounter 
@@ -662,26 +665,23 @@ namespace litingaddin
             {
                 String strID_2;
                 String section_year_string;
-                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
-                application.OpenHierarchy(onenote_file + "\\My Project Journal\\" + date_year + "\\",
-                System.String.Empty, out strID_2, OneNote.CreateFileType.cftFolder);
-
+                string strID_1 = notebook.Attribute("ID").Value;
+                application.OpenHierarchy(date_year , strID_1, out strID_2, OneNote.CreateFileType.cftFolder);
                 application.GetHierarchy(strID_2, OneNote.HierarchyScope.hsSections, out section_year_string);
                 section_year = XElement.Parse(section_year_string);
             }
-
+            
 
             XElement section_mouth = section_year.Elements(ns + "Section").Where(x => x.Attribute("name").Value == date_mouth).FirstOrDefault();
             if (section_mouth == null)
             {
+                
                 String strID_3;
                 String section_mouth_string;
-                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
-                application.OpenHierarchy(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one",
-                System.String.Empty, out strID_3, OneNote.CreateFileType.cftSection);
+                string strID_2 = section_year.Attribute("ID").Value;
+                application.OpenHierarchy(date_mouth + ".one", strID_2, out strID_3, OneNote.CreateFileType.cftSection);
                 application.GetHierarchy(strID_3, OneNote.HierarchyScope.hsSections, out section_mouth_string);
                 section_mouth = XElement.Parse(section_mouth_string);
-
             }
 
 
@@ -758,10 +758,8 @@ namespace litingaddin
             {
                 String strID_2;
                 String section_year_string;
-                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
-                application.OpenHierarchy(onenote_file + "\\My Work Log\\" + date_year + "\\",
-                System.String.Empty, out strID_2, OneNote.CreateFileType.cftFolder);
-
+                string strID_1 = notebook.Attribute("ID").Value;
+                application.OpenHierarchy(date_year, strID_1, out strID_2, OneNote.CreateFileType.cftFolder);
                 application.GetHierarchy(strID_2, OneNote.HierarchyScope.hsSections, out section_year_string);
                 section_year = XElement.Parse(section_year_string);
             }
@@ -772,9 +770,8 @@ namespace litingaddin
             {
                 String strID_3;
                 String section_mouth_string;
-                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
-                application.OpenHierarchy(onenote_file + "\\My Work Log\\" + date_year + "\\" + date_mouth + ".one",
-                System.String.Empty, out strID_3, OneNote.CreateFileType.cftSection);
+                string strID_2 = section_year.Attribute("ID").Value;
+                application.OpenHierarchy(date_mouth + ".one", strID_2, out strID_3, OneNote.CreateFileType.cftSection);
                 application.GetHierarchy(strID_3, OneNote.HierarchyScope.hsSections, out section_mouth_string);
                 section_mouth = XElement.Parse(section_mouth_string);
 
@@ -853,10 +850,8 @@ namespace litingaddin
             {
                 String strID_2;
                 String section_year_string;
-                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
-                application.OpenHierarchy(onenote_file + "\\My Work Log\\" + date_year + "\\",
-                System.String.Empty, out strID_2, OneNote.CreateFileType.cftFolder);
-
+                string strID_1 = notebook.Attribute("ID").Value;
+                application.OpenHierarchy(date_year, strID_1, out strID_2, OneNote.CreateFileType.cftFolder);
                 application.GetHierarchy(strID_2, OneNote.HierarchyScope.hsSections, out section_year_string);
                 section_year = XElement.Parse(section_year_string);
             }
@@ -867,9 +862,8 @@ namespace litingaddin
             {
                 String strID_3;
                 String section_mouth_string;
-                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
-                application.OpenHierarchy(onenote_file + "\\My Work Log\\" + date_year + "\\" + date_mouth + ".one",
-                System.String.Empty, out strID_3, OneNote.CreateFileType.cftSection);
+                string strID_2 = section_year.Attribute("ID").Value;
+                application.OpenHierarchy(date_mouth + ".one", strID_2, out strID_3, OneNote.CreateFileType.cftSection);
                 application.GetHierarchy(strID_3, OneNote.HierarchyScope.hsSections, out section_mouth_string);
                 section_mouth = XElement.Parse(section_mouth_string);
 
@@ -1067,10 +1061,8 @@ namespace litingaddin
             {
                 String strID_2;
                 String section_year_string;
-                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
-                application.OpenHierarchy(onenote_file + "\\My Work Log\\" + date_year + "\\",
-                System.String.Empty, out strID_2, OneNote.CreateFileType.cftFolder);
-
+                string strID_1 = notebook.Attribute("ID").Value;
+                application.OpenHierarchy(date_year, strID_1, out strID_2, OneNote.CreateFileType.cftFolder);
                 application.GetHierarchy(strID_2, OneNote.HierarchyScope.hsSections, out section_year_string);
                 section_year = XElement.Parse(section_year_string);
             }
@@ -1081,9 +1073,8 @@ namespace litingaddin
             {
                 String strID_3;
                 String section_mouth_string;
-                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
-                application.OpenHierarchy(onenote_file + "\\My Work Log\\" + date_year + "\\" + date_mouth + ".one",
-                System.String.Empty, out strID_3, OneNote.CreateFileType.cftSection);
+                string strID_2 = section_year.Attribute("ID").Value;
+                application.OpenHierarchy(date_mouth + ".one", strID_2, out strID_3, OneNote.CreateFileType.cftSection);
                 application.GetHierarchy(strID_3, OneNote.HierarchyScope.hsSections, out section_mouth_string);
                 section_mouth = XElement.Parse(section_mouth_string);
 
@@ -1242,22 +1233,23 @@ namespace litingaddin
             {
                 String strID_2;
                 String section_year_string;
-                application.OpenHierarchy(onenote_file + "\\" + Page_Notebook + "\\" + Page_SectionGroup + "\\",
-                System.String.Empty, out strID_2, OneNote.CreateFileType.cftFolder);
-
+                string strID_1 = notebook.Attribute("ID").Value;
+                application.OpenHierarchy(Page_SectionGroup, strID_1, out strID_2, OneNote.CreateFileType.cftFolder);
                 application.GetHierarchy(strID_2, OneNote.HierarchyScope.hsSections, out section_year_string);
                 section_year = XElement.Parse(section_year_string);
             }
 
 
+            
+
+            
             XElement section_mouth = section_year.Elements(ns + "Section").Where(x => x.Attribute("name").Value == Page_Section).FirstOrDefault();
             if (section_mouth == null)
             {
                 String strID_3;
                 String section_mouth_string;
-                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
-                application.OpenHierarchy(onenote_file + "\\" + Page_Notebook + "\\" + Page_SectionGroup + "\\" + Page_Section + ".one",
-                System.String.Empty, out strID_3, OneNote.CreateFileType.cftSection);
+                string strID_2 = section_year.Attribute("ID").Value;
+                application.OpenHierarchy(Page_Section + ".one", strID_2, out strID_3, OneNote.CreateFileType.cftSection);
                 application.GetHierarchy(strID_3, OneNote.HierarchyScope.hsSections, out section_mouth_string);
                 section_mouth = XElement.Parse(section_mouth_string);
 
@@ -1651,6 +1643,31 @@ namespace litingaddin
         {
             return "heading" + index.ToString();
         }
+
+       public void copy_chun(IRibbonControl control)
+        {
+            OneNote.Application onenoteApp = new OneNote.Application();
+            string xml;
+            var pageid = onenoteApp.Windows.CurrentWindow.CurrentPageId;
+            onenoteApp.GetPageContent(pageid, out xml, OneNote.PageInfo.piAll);
+            XDocument doc = XDocument.Parse(xml);
+            XNamespace ns = doc.Root.Name.Namespace;
+            StringBuilder sb = new StringBuilder();
+            foreach (XElement Outlines in from node in doc.Descendants(ns + "Outline").ToList() select node)
+            {
+                foreach (XElement outline in from node1 in Outlines.Descendants(ns + "T").Where(o => o.Attribute("selected").Value == "all") select node1)
+                {
+                    sb.AppendLine(outline.Value);
+                }
+            }
+            Clipboard.SetDataObject(sb.ToString());
+
+        }
+
+
+
+
+
         class CCOMStreamWrapper : IStream
         {
             public CCOMStreamWrapper(System.IO.Stream streamWrap)
