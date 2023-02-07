@@ -14,7 +14,11 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
 using OneNote = Microsoft.Office.Interop.OneNote;
+using TextCopy;
 using System.Text;
+using System.Text.RegularExpressions;
+using HtmlAgilityPack;
+
 
 namespace litingaddin
 {
@@ -1644,7 +1648,8 @@ namespace litingaddin
             return "heading" + index.ToString();
         }
 
-       public void copy_chun(IRibbonControl control)
+
+        public static void get_chun(out String page_copy)
         {
             OneNote.Application onenoteApp = new OneNote.Application();
             string xml;
@@ -1653,15 +1658,159 @@ namespace litingaddin
             XDocument doc = XDocument.Parse(xml);
             XNamespace ns = doc.Root.Name.Namespace;
             StringBuilder sb = new StringBuilder();
-            foreach (XElement Outlines in from node in doc.Descendants(ns + "Outline").ToList() select node)
+            foreach (XElement Outlines in doc.Descendants(ns + "Outline").ToList())
             {
-                foreach (XElement outline in from node1 in Outlines.Descendants(ns + "T").Where(o => o.Attribute("selected").Value == "all") select node1)
+                String Outlines_selected = null;
+                Outlines_selected = Outlines.Attribute("selected").Value;
+                if (Outlines_selected != null)
                 {
-                    sb.AppendLine(outline.Value);
+                    foreach (XElement Outlines_OEChilds in Outlines.Descendants(ns + "OEChildren").ToList())
+                    {
+                        String OEChilds_selected = null;
+                        try
+                        {
+                            OEChilds_selected = Outlines_OEChilds.Attribute("selected").Value;
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+
+                        if (OEChilds_selected != null)
+                        {
+                            //MessageBox.Show(Outlines_OEChilds.ToString());
+                            foreach (XElement Outlines_OE in Outlines_OEChilds.Descendants(ns + "OE").ToList())
+                            {
+
+
+                                String OE_selected = null;
+                                try
+                                {
+                                    OE_selected = Outlines_OE.Attribute("selected").Value;
+                                }
+                                catch (Exception)
+                                {
+
+                                }
+
+                                if (OE_selected != null)
+                                {
+                                    //MessageBox.Show(Outlines_OE.ToString());
+                                    foreach (XElement Outlines_T in Outlines_OE.Descendants(ns + "T").ToList())
+                                    {
+                                        String T_selected = null;
+                                        try
+                                        {
+                                            T_selected = Outlines_T.Attribute("selected").Value;
+                                        }
+                                        catch (Exception)
+                                        {
+
+                                        }
+
+                                        if (T_selected != null)
+                                        {
+                                            MessageBox.Show(Outlines_T.ToString());
+                                            sb.AppendLine(Outlines_T.Value);
+                                        }
+                                        else
+                                        {
+                                            continue;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+
+                                    continue;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                }
+                else
+                {
+                    continue;
+                }
+
+
+            }
+            page_copy= sb.ToString();
+            /*MessageBox.Show(sb.ToString());
+            TextCopy.ClipboardService.SetText(sb.ToString());*/
+        }
+
+        public static void Replace_cpan(String cpan_in,out String cpan_out)
+        {
+
+
+
+            HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+            doc.LoadHtml(cpan_in);
+            StringBuilder sb_1 = new StringBuilder();
+            var spanNodes = doc.DocumentNode.SelectNodes("//span");
+            if (spanNodes != null)
+            {
+                foreach (var spanNode in spanNodes)
+                {
+                    string content = spanNode.InnerHtml;
+                    sb_1.Append(content);
                 }
             }
-            Clipboard.SetDataObject(sb.ToString());
+            cpan_out= sb_1.ToString();
 
+        }
+
+        public void copy_chun(IRibbonControl control)
+        {
+            OneNote.Application onenoteApp = new OneNote.Application();
+            string xml;
+            var pageid = onenoteApp.Windows.CurrentWindow.CurrentPageId;
+            onenoteApp.GetPageContent(pageid, out xml, OneNote.PageInfo.piAll);
+            XDocument doc = XDocument.Parse(xml);
+            XNamespace ns = doc.Root.Name.Namespace;
+            StringBuilder sb = new StringBuilder();
+            String page_copy;
+
+            foreach (XElement Outlines_T in doc.Descendants(ns + "T").ToList())
+            {
+                String T_selected = null;
+                try
+                {
+                    T_selected = Outlines_T.Attribute("selected").Value;
+                }
+                catch (Exception)
+                {
+
+                }
+
+                if (T_selected == "all")
+                {
+                    //MessageBox.Show(Outlines_T.ToString());
+                    //sb.AppendLine(Outlines_T.Value);
+                    if(Outlines_T.Value.Contains("span") ==true)
+                    {
+                        Replace_cpan(Outlines_T.Value, out page_copy);
+                        sb.AppendLine(page_copy);
+                    }
+                    else
+                    {
+                        sb.AppendLine(Outlines_T.Value);
+                    }
+                    
+                }
+                else
+                {
+                    continue;
+                }
+            }
+            //MessageBox.Show(sb.ToString());
+            TextCopy.ClipboardService.SetText(sb.ToString());
+            MessageBox.Show("复制成功！");
         }
 
 
