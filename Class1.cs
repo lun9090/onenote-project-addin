@@ -62,8 +62,20 @@ namespace litingaddin
             return Properties.Resources.ribbon;
         }
 
+        public static  void tittle_first()
+        {
+            string xmlPageTitle;
+            OneNote.Application onenoteApp = new OneNote.Application();
+            onenoteApp.GetPageContent(onenoteApp.Windows.CurrentWindow.CurrentPageId, out xmlPageTitle, OneNote.PageInfo.piAll);
+            var xmlDoc = XDocument.Parse(xmlPageTitle);
+            XNamespace ns = xmlDoc.Root.Name.Namespace;
+            XElement OutLine_title = xmlDoc.Descendants(ns + "Title").FirstOrDefault();
+            string outLine_titles_one = OutLine_title.Descendants(ns + "OE").FirstOrDefault().Attribute("objectID").Value;
+            onenoteApp.NavigateTo(onenoteApp.Windows.CurrentWindow.CurrentPageId, outLine_titles_one, false);
+        }
         public static void update_tittle_all()
         {
+            tittle_first();
             OneNote.Application onenoteApp = new OneNote.Application();
             string xml;
             var pageid = onenoteApp.Windows.CurrentWindow.CurrentPageId;
@@ -118,6 +130,7 @@ namespace litingaddin
         }
         public static void Del_tags(IRibbonControl control, string p_name)
         {
+            tittle_first();
             OneNote.Application onenoteApp = new OneNote.Application();
             string xml;
             var pageid = onenoteApp.Windows.CurrentWindow.CurrentPageId;
@@ -146,6 +159,7 @@ namespace litingaddin
         }
         public void Del_all_tags(IRibbonControl control)
         {
+            tittle_first();
             OneNote.Application onenoteApp = new OneNote.Application();
             string xml;
             var pageid = onenoteApp.Windows.CurrentWindow.CurrentPageId;
@@ -178,6 +192,7 @@ namespace litingaddin
         }
         public static void Set_tags(IRibbonControl control, string p_type, string p_name)
         {
+            tittle_first();
             OneNote.Application onenoteApp = new OneNote.Application();
             string xml;
             var pageid = onenoteApp.Windows.CurrentWindow.CurrentPageId;
