@@ -47,11 +47,10 @@
 				</group>
 				<group id="riji" label="日记管理">
 					<button id="riji_create_page" label="创建日记页（MyJournal.Notebook）" size="normal" onAction="riji_create_page" image="playlist_add.png" />
-					<button id="create_my_riji" label="项目管理日记" size="normal" onAction="create_my_riji" image="playlist_add.png" />
 				</group>
 				<group id="ribao" label="日报管理">
+					<button id="create_my_ribao_quan" label="每日日报（全）" size="large" onAction="create_my_ribao_quan" image="playlist_add.png" />
 					<button id="create_my_ribao_kong" label="每日日报（空模板）" size="normal" onAction="create_my_ribao_kong" image="playlist_add.png" />
-					<button id="create_my_ribao_quan" label="每日日报（全）" size="normal" onAction="create_my_ribao_quan" image="playlist_add.png" />
 					<button id="create_my_ribao_dan" label="每日日报（报工）" size="normal" onAction="create_my_ribao_dan" image="playlist_add.png" />
 					<button id="create_my_ribao_quan_leater" label="明日日报（报工）" size="normal" onAction="create_my_ribao_quan_leater" image="playlist_add.png" />
 					<button id="create_my_ribao_quan_all" label="生成批量日报（全）" size="normal" onAction="create_my_ribao_quan_all" image="playlist_add.png" />
