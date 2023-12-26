@@ -55,9 +55,11 @@
 					<button id="create_my_ribao_quan_leater" label="明日日报（报工）" size="normal" onAction="create_my_ribao_quan_leater" image="playlist_add.png" />
 					<button id="create_my_ribao_quan_all" label="生成批量日报（全）" size="normal" onAction="create_my_ribao_quan_all" image="playlist_add.png" />
 				</group>
-				<group id="project" label="项目内容管理">
+				<group id="project" label="页面内容管理">
 					<dropDown id="project_name" label="项目名称（笔记本）" getItemCount="GetItemCount"  getItemID="GetItemID" getItemLabel="GetItemLabel" onAction="GetonAction"/>
+					<button id="create_xuqiu_page" label="创建带日期页面" size="normal"  onAction="create_xuqiu_page" image="playlist_add.png"/>
 				</group>
+				
 			</tab>
 		</tabs>
 	</ribbon>

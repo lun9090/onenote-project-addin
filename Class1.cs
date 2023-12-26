@@ -18,6 +18,9 @@ using TextCopy;
 using System.Text;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using Microsoft.Office.Tools.Ribbon;
+
 
 
 namespace litingaddin
@@ -57,10 +60,13 @@ namespace litingaddin
             }
         }
 
+
         public string GetCustomUI(string RibbonID)
         {
             return Properties.Resources.ribbon;
         }
+
+        
 
         public static  void tittle_first()
         {
@@ -575,14 +581,14 @@ namespace litingaddin
             {
                 String strID_1;
                 String notebook_string;
-                //MessageBox.Show(onenote_file + "\\My Journal\\" + date_year + "\\" + date_mouth + ".one");
+                //MessageBox.Show(onenote_file + "\\My Project Journal\\" + date_year + "\\" + date_mouth + ".one");
                 application.OpenHierarchy(onenote_file + "\\My Journal\\",
                 System.String.Empty, out strID_1, OneNote.CreateFileType.cftNotebook);
                 application.GetHierarchy(strID_1, OneNote.HierarchyScope.hsNotebooks, out notebook_string);
                 notebook = XElement.Parse(notebook_string);
             }
 
-
+            
 
             // If there is a section, just use the first one we encounter 
             XElement section_year = notebook.Elements(ns + "SectionGroup").Where(x => x.Attribute("name").Value == date_year).FirstOrDefault();
@@ -608,9 +614,11 @@ namespace litingaddin
                 section_mouth = XElement.Parse(section_mouth_string);
 
             }
+
+
             // Create a page 
             XElement section_day = section_mouth.Elements(ns + "Section").Where(x => x.Attribute("name").Value == date).FirstOrDefault();
-            if (section_mouth == null)
+            if (section_day == null)
             {
                 string newPageID;
                 application.CreateNewPage(section_mouth.Attribute("ID").Value, out newPageID);
@@ -619,7 +627,6 @@ namespace litingaddin
                 // Create the page element using the ID of the new page OneNote just created 
                 XElement newPage = new XElement(ns + "Page");
                 newPage.SetAttributeValue("ID", newPageID);
-
 
 
                 // Add a title just for grins 
@@ -1150,8 +1157,7 @@ namespace litingaddin
                 notebook = XElement.Parse(notebook_string);
             }
 
-
-
+            
             // If there is a section, just use the first one we encounter 
             XElement section_year = notebook.Elements(ns + "SectionGroup").Where(x => x.Attribute("name").Value == Page_SectionGroup).FirstOrDefault();
             if (section_year == null)
@@ -1165,9 +1171,6 @@ namespace litingaddin
             }
 
 
-            
-
-            
             XElement section_mouth = section_year.Elements(ns + "Section").Where(x => x.Attribute("name").Value == Page_Section).FirstOrDefault();
             if (section_mouth == null)
             {
@@ -1550,6 +1553,52 @@ namespace litingaddin
             
         }
 
+       
+        public void create_xuqiu_page(IRibbonControl control)
+        {
+           
+            OneNote.Application onenoteApp = new OneNote.Application();
+            string outLine_SectionId = onenoteApp.Windows.CurrentWindow.CurrentSectionId;
+            string outLine_PageId;
+            onenoteApp.CreateNewPage(outLine_SectionId,out outLine_PageId);
+            string xml;
+            onenoteApp.GetPageContent(outLine_PageId, out xml, OneNote.PageInfo.piAll);
+            var doc = XDocument.Parse(xml);
+            XNamespace ns = doc.Root.Name.Namespace;
+
+            // 获取当前日期
+            var date = DateTime.Now.ToString("yyyy-MM-dd");
+            var date_year = DateTime.Now.ToString("yyyy");
+            var date_mouth = DateTime.Now.ToString("MMMM", new CultureInfo("zh-CN"));
+
+
+            // Get info from OneNote 
+
+
+
+            XElement newPage = new XElement(ns + "Page");
+            newPage.SetAttributeValue("ID", outLine_PageId);
+
+            // Add a title just for grins 
+            newPage.Add(new XElement(ns + "Title",
+                new XElement(ns + "OE",
+                 new XElement(ns + "T",
+                  new XCData("**｜"+date)))));
+            // Add an outline and text content 
+            newPage.Add(new XElement(ns + "Outline",
+                new XElement(ns + "OEChildren",
+                 new XElement(ns + "OE",
+                  new XElement(ns + "T",
+                   new XCData(""))))));
+            // 创建 OneNote 页
+            
+            onenoteApp.UpdatePageContent(newPage.ToString());
+            //MessageBox.Show(newPage.ToString());
+
+
+
+        }
+
         public  int GetItemCount(IRibbonControl control)
         {
             List<notebooks_list> ItemLabels;
@@ -1737,7 +1786,6 @@ namespace litingaddin
             TextCopy.ClipboardService.SetText(sb.ToString());
             MessageBox.Show("复制成功！");
         }
-
 
 
 

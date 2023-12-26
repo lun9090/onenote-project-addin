@@ -92,7 +92,7 @@ namespace litingaddin.Properties {
         
         /// <summary>
         ///   查找类似 &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
-        ///&lt;customUI xmlns=&quot;http://schemas.microsoft.com/office/2006/01/customui&quot; loadImage=&quot;GetImage&quot; &gt;
+        ///&lt;customUI xmlns=&quot;http://schemas.microsoft.com/office/2009/07/customui&quot; loadImage=&quot;GetImage&quot; &gt;
         ///	&lt;ribbon&gt;
         ///		&lt;tabs&gt;
         ///			&lt;tab id=&quot;bianji1&quot; label=&quot;项目管理&quot;&gt;
