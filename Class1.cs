@@ -643,6 +643,7 @@ namespace litingaddin
                 // 创建 OneNote 页
                 //MessageBox.Show(newPage.ToString());
                 application.UpdatePageContent(newPage.ToString());
+                application.NavigateTo(newPageID, "", false);
             }
 
 
@@ -738,6 +739,7 @@ namespace litingaddin
                 // 创建 OneNote 页
                 //MessageBox.Show(newPage.ToString());
                 application.UpdatePageContent(newPage.ToString());
+                application.NavigateTo(newPageID, "", false);
             }
 
 
@@ -949,6 +951,8 @@ namespace litingaddin
                 // 创建 OneNote 页
                 //MessageBox.Show(newPage.ToString());
                 application.UpdatePageContent(newPage.ToString());
+                application.NavigateTo(newPageID,"",false) ;
+
             }
 
         }
@@ -1128,6 +1132,7 @@ namespace litingaddin
                 // 创建 OneNote 页
                 //MessageBox.Show(newPage.ToString());
                 application.UpdatePageContent(newPage.ToString());
+                application.NavigateTo(newPageID, "", false);
             }
 
         }
@@ -1443,6 +1448,7 @@ namespace litingaddin
                 // 创建 OneNote 页
                 //MessageBox.Show(newPage.ToString());
                 application.UpdatePageContent(newPage.ToString());
+                application.NavigateTo(newPageID, "", false);
             }
 
         }
@@ -1594,6 +1600,7 @@ namespace litingaddin
             
             onenoteApp.UpdatePageContent(newPage.ToString());
             //MessageBox.Show(newPage.ToString());
+            onenoteApp.NavigateTo(outLine_PageId, "", false);
 
 
 

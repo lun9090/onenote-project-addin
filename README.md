@@ -5,7 +5,7 @@ onenote项目管理插件
 随着onenote使用的不断深入，新增了不少功能，优化了不少功能，见功能清单。
 
 ## 功能清单
-![image](https://user-images.githubusercontent.com/78783303/215311541-862f0843-9d39-4678-bad0-c0b6676ae5f2.png)
+![image-20240102165138765](D:\source\repos\all-in-one\litingaddin\README.assets\image-20240102165138765.png)
 
 
 ## 需要解释的功能
